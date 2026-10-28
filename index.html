@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Web Tổng Hợp Nhóm 5 — Lập Trình Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fafafa; --surface:#ffffff; --surface-2:#f4f4f5;
+    --border:#e4e4e7; --border-strong:#d4d4d8;
+    --text:#09090b; --muted:#52525b; --muted-2:#71717a;
+    --primary:#09090b; --primary-fg:#fafafa;
+    --badge-bg:#f4f4f5; --badge-text:#27272a;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.06),0 16px 40px rgba(0,0,0,.08);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#09090b; --surface:#101012; --surface-2:#18181b;
+      --border:#27272a; --border-strong:#3f3f46;
+      --text:#fafafa; --muted:#d4d4d8; --muted-2:#a1a1aa;
+      --primary:#fafafa; --primary-fg:#09090b;
+      --badge-bg:#27272a; --badge-text:#e4e4e7;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+      --shadow-hover:0 2px 4px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.45);
+      color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Be Vietnam Pro",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  #bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9}
+  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(900px 500px at 15% -5%,rgba(9,9,11,.06),transparent 60%),radial-gradient(800px 500px at 90% 0%,rgba(9,9,11,.05),transparent 60%)}
+  @media (prefers-color-scheme:dark){.veil{background:radial-gradient(900px 500px at 15% -5%,rgba(255,255,255,.07),transparent 60%),radial-gradient(800px 500px at 90% 0%,rgba(255,255,255,.05),transparent 60%)}}
+  .wrap{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:34px 20px 30px}
+  a{color:inherit}
+  .mono{font-family:"JetBrains Mono",monospace}
+  /* Minimal group title */
+  .head{text-align:center;max-width:720px;margin:0 auto}
+  .head .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:6px 11px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted)}
+  .head .pill .dot{width:7px;height:7px;border-radius:50%;background:#16a34a;flex:none}
+  .head .pill strong{color:var(--text);font-weight:700}
+  .head h1{margin:16px 0 0;font-size:clamp(30px,5vw,46px);line-height:1.08;letter-spacing:-.03em;font-weight:800}
+  .head h1 span{white-space:nowrap}
+  .head p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+  /* 3D orbit stage */
+  .orbit-stage{position:relative;height:520px;margin-top:6px;perspective:1500px;overflow:hidden;cursor:grab;touch-action:pan-y;border-radius:20px}
+  .orbit-stage:active{cursor:grabbing}
+  .orbit-floor{position:absolute;left:50%;bottom:34px;width:min(700px,84%);height:110px;transform:translateX(-50%) rotateX(72deg);border:1px solid var(--border);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.07),transparent 72%);pointer-events:none}
+  @media (prefers-color-scheme:dark){.orbit-floor{background:radial-gradient(closest-side,rgba(255,255,255,.08),transparent 72%)}}
+  .ring{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+  .hub{position:absolute;left:50%;top:50%;width:108px;height:108px;margin:-54px 0 0 -54px;border-radius:50%;border:1px solid var(--border-strong);background:color-mix(in srgb,var(--surface) 86%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:var(--shadow);will-change:transform}
+  .hub b{font-size:15px;letter-spacing:.04em;line-height:1.2}
+  .hub span{font-size:11px;color:var(--muted-2);font-weight:600}
+  .card{position:absolute;left:50%;top:50%;width:300px;height:284px;margin:-142px 0 0 -150px;border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;will-change:transform,opacity;text-decoration:none}
+  .card.is-front{border-color:var(--border-strong);box-shadow:var(--shadow-hover)}
+  .card:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+  .card-top{display:flex;gap:12px;align-items:center}
+  .avatar{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:18px;letter-spacing:-.02em;flex:none;border:1px solid rgba(0,0,0,.06)}
+  .num{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted-2);font-weight:600}
+  .status{font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:999px;border:1px solid var(--border);white-space:nowrap;display:inline-block;margin-top:5px}
+  .status.ready{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+  @media (prefers-color-scheme:dark){.status.ready{background:#052e16;color:#86efac;border-color:#14532d}}
+  .status.pending{background:var(--badge-bg);color:var(--muted)}
+  .name{margin:18px 0 0;font-size:18.5px;line-height:1.3;letter-spacing:-.015em;font-weight:700;flex:1}
+  .card-foot{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;border-radius:9px;padding:9px 13px;border:1px solid transparent;white-space:nowrap}
+  .btn-primary{background:var(--primary);color:var(--primary-fg)}
+  .btn-disabled{background:var(--surface-2);color:var(--muted-2);border-color:var(--border)}
+  .host{font-size:12px;color:var(--muted-2);font-family:"JetBrains Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:118px}
+  /* Orbit controls */
+  .orbit-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:2px;flex-wrap:wrap}
+  .nav-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);flex:none}
+  .nav-btn:hover{border-color:var(--border-strong)}
+  .nav-btn:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+  .hint{font-size:13px;color:var(--muted);text-align:center}
+  @media (max-width:720px){
+    .orbit-stage{height:452px}
+    .card{width:224px;height:262px;margin:-131px 0 0 -112px;padding:16px}
+    .name{font-size:16.5px;margin-top:14px}
+    .hub{width:86px;height:86px;margin:-43px 0 0 -43px}
+    .hub b{font-size:13px}
+    .host{display:none}
+  }
+  @media (max-width:600px){.wrap{padding:24px 14px 24px}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="head" id="pageHead">
+    <span class="pill"><span class="dot"></span> Môn <strong>Lập trình Web</strong> · Nhóm <strong>5</strong></span>
+    <h1>Tổng hợp portfolio <span>Nhóm 5</span></h1>
+    <p>GVHD ThS. Trần Thịnh Mạnh Đức · 6 thành viên</p>
+  </header>
+
+  <main>
+    <div class="orbit-stage" id="orbitStage" aria-label="Vòng xoay 3D các thẻ thành viên Nhóm 5">
+      <div class="orbit-floor" aria-hidden="true"></div>
+      <div class="ring" id="orbitRing">
+        <div class="hub" id="orbitHub" aria-hidden="true"><b>NHÓM 5</b><span>6 thành viên</span></div>
+      </div>
+    </div>
+
+    <div class="orbit-controls" id="orbitControls">
+      <button class="nav-btn" id="prevBtn" type="button" aria-label="Thẻ trước">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      </button>
+      <span class="hint">Kéo để xoay vòng thẻ · Bấm thẻ ở mặt trước để mở portfolio</span>
+      <button class="nav-btn" id="nextBtn" type="button" aria-label="Thẻ tiếp theo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/*
+  ============================================================
+  CẬU CHỈ CẦN SỬA Ở ĐÂY KHI CÓ LINK:
+  Dán link portfolio vào trường url của từng bạn, lưu lại là
+  thẻ tự bật thành link bấm được.
+  Ví dụ: url: "https://example.com/portfolio-an"
+  Để trống "" thì thẻ hiện trạng thái "Sắp cập nhật".
+  ============================================================
+*/
+var MEMBERS = [
+  { id:"an",        num:"01", name:"Đặng Hoàng Ân",         initials:"Â",  color:"#09090b", colorFg:"#fafafa", url:"https://kaiyodev.github.io/portfolio-an/" },
+  { id:"hainam",    num:"02", name:"Phan Hải Nam",          initials:"HN", color:"#fef3c7", colorFg:"#92400e", url:"https://namph1377-sketch.github.io/Portfolio/" },
+  { id:"nhatdinh",  num:"03", name:"Lê Nguyễn Nhật Đình",   initials:"NĐ", color:"#dbeafe", colorFg:"#1e40af", url:"https://roxy2434.github.io/Portfolio/" },
+  { id:"minhthu",   num:"04", name:"Nguyễn Ngọc Minh Thư",  initials:"MT", color:"#fce7f3", colorFg:"#9d174d", url:"https://minhthu2025.github.io/Aboutme/" },
+  { id:"quynhnghi", num:"05", name:"Nguyễn Lưu Quỳnh Nghi", initials:"QN", color:"#dcfce7", colorFg:"#166534", url:"https://ak98587.github.io/portfolio/" },
+  { id:"hoanganh",  num:"06", name:"Nguyễn Hoàng Anh",      initials:"HA", color:"#ede9fe", colorFg:"#5b21b6", url:"https://hoanhh4977.github.io/Portfolio/" }
+];
+
+var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var stage = document.getElementById("orbitStage");
+var ring = document.getElementById("orbitRing");
+var hub = document.getElementById("orbitHub");
+var cards = [];
+
+function hostOf(url){ try { return new URL(url).hostname.replace(/^www\./,""); } catch(e){ return ""; } }
+
+function svgIcon(){
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("width", "14");
+  svg.setAttribute("height", "14");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2.2");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+  ["M7 17L17 7", "M8 7h9v9"].forEach(function(d){
+    var p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d);
+    svg.appendChild(p);
+  });
+  return svg;
+}
+
+function render(){
+  MEMBERS.forEach(function(m){
+    var has = !!m.url;
+    var card = document.createElement(has ? "a" : "article");
+    card.className = "card";
+    card.setAttribute("aria-label", has ? "Mở portfolio của " + m.name : m.name + " — chưa có link portfolio");
+    if(has){
+      card.setAttribute("href", m.url);
+      card.setAttribute("target", "_blank");
+      card.setAttribute("rel", "noopener noreferrer");
+    }
+
+    var top = document.createElement("div");
+    top.className = "card-top";
+    var avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.style.background = m.color;
+    avatar.style.color = m.colorFg;
+    avatar.textContent = m.initials;
+    var meta = document.createElement("div");
+    var num = document.createElement("div");
+    num.className = "num";
+    num.textContent = "THÀNH VIÊN " + m.num;
+    var status = document.createElement("span");
+    status.className = "status " + (has ? "ready" : "pending");
+    status.textContent = has ? "● Có link portfolio" : "○ Sắp cập nhật";
+    meta.appendChild(num);
+    meta.appendChild(status);
+    top.appendChild(avatar);
+    top.appendChild(meta);
+
+    var name = document.createElement("h2");
+    name.className = "name";
+    name.textContent = m.name;
+
+    var foot = document.createElement("div");
+    foot.className = "card-foot";
+    var btn = document.createElement("span");
+    if(has){
+      btn.className = "btn btn-primary";
+      btn.textContent = "Xem portfolio ";
+      btn.appendChild(svgIcon());
+    } else {
+      btn.className = "btn btn-disabled";
+      btn.textContent = "Sắp cập nhật link";
+    }
+    foot.appendChild(btn);
+    var host = document.createElement("span");
+    host.className = "host";
+    if(has){
+      host.textContent = hostOf(m.url);
+      host.title = m.url;
+    } else {
+      host.textContent = "—";
+    }
+    foot.appendChild(host);
+
+    card.appendChild(top);
+    card.appendChild(name);
+    card.appendChild(foot);
+    ring.appendChild(card);
+  });
+  cards = Array.prototype.slice.call(ring.querySelectorAll(".card"));
+}
+
+/* ---- 3D orbit: cards revolving around each other ---- */
+var state = { rot: 0, vel: 0, dragging:false, hover:false, focusPause:false, lastInteract:0 };
+var radius = 340;
+var STEP = 360 / MEMBERS.length;
+
+function norm(a){ a = a % 360; if(a > 180) a -= 360; if(a < -180) a += 360; return a; }
+function cardAngle(i){ return i * STEP; }
+
+function layout(){
+  var w = stage.clientWidth || 1080;
+  var cardW = cards.length ? cards[0].offsetWidth : 300;
+  radius = Math.max(Math.round(cardW * 0.8), Math.min(400, w/2 - cardW/2 - 8));
+}
+
+function paint(){
+  ring.style.transform = "rotateX(-8deg) rotateY(" + state.rot + "deg)";
+  hub.style.transform = "rotateY(" + (-state.rot) + "deg)";
+  for(var i=0;i<cards.length;i++){
+    var eff = norm(state.rot + cardAngle(i));
+    var c = Math.cos(eff * Math.PI/180);
+    var s = 1 + 0.07 * Math.max(0, c);
+    cards[i].style.transform = "rotateY(" + cardAngle(i) + "deg) translateZ(" + radius + "px) scale(" + s.toFixed(3) + ")";
+    cards[i].style.opacity = (0.30 + 0.70 * ((c + 1) / 2)).toFixed(2);
+    cards[i].style.pointerEvents = c > 0.75 ? "auto" : "none";
+    cards[i].classList.toggle("is-front", Math.abs(eff) < 30);
+  }
+}
+
+function tweenRot(target){
+  state.vel = 0;
+  state.lastInteract = performance.now();
+  if(window.gsap && !reduceMotion){
+    gsap.to(state, { rot: target, duration:.7, ease:"power3.out", overwrite:true });
+  } else {
+    state.rot = target; paint();
+  }
+}
+function rotateCardToFront(i){
+  var delta = norm(-cardAngle(i) - state.rot);
+  tweenRot(state.rot + delta);
+}
+function stepBy(dir){
+  var base = Math.round(state.rot / STEP) * STEP;
+  tweenRot(base + dir * STEP);
+}
+document.getElementById("prevBtn").addEventListener("click", function(){ stepBy(1); });
+document.getElementById("nextBtn").addEventListener("click", function(){ stepBy(-1); });
+
+/* Drag to spin (with inertia); a real drag must not trigger the card link */
+var dragId = null, startX = 0, lastX = 0, startRot = 0, moved = 0, lastT = 0;
+stage.addEventListener("pointerdown", function(e){
+  if(e.target.closest("button")) return;
+  dragId = e.pointerId; startX = lastX = e.clientX; startRot = state.rot; moved = 0;
+  state.vel = 0; state.dragging = true; lastT = performance.now();
+  if(window.gsap) gsap.killTweensOf(state);
+  try { stage.setPointerCapture(dragId); } catch(err){}
+});
+stage.addEventListener("pointermove", function(e){
+  if(!state.dragging || e.pointerId !== dragId) return;
+  var dx = e.clientX - lastX; lastX = e.clientX;
+  moved = Math.max(moved, Math.abs(e.clientX - startX));
+  state.rot = startRot + (e.clientX - startX) * 0.4;
+  var now = performance.now(), dtt = Math.max(1, now - lastT); lastT = now;
+  state.vel = (dx * 0.4) / (dtt / 16.7);
+  paint();
+});
+function endDrag(e){
+  if(e.pointerId !== dragId) return;
+  state.dragging = false; dragId = null;
+  state.lastInteract = performance.now();
+  if(moved < 6) state.vel = 0;
+}
+stage.addEventListener("pointerup", endDrag);
+stage.addEventListener("pointercancel", endDrag);
+
+/* Click: side card -> spin it to the front; front card -> follow its link */
+stage.addEventListener("click", function(e){
+  if(moved > 6){ e.preventDefault(); e.stopPropagation(); moved = 0; return; }
+  var card = e.target.closest(".card");
+  if(!card) return;
+  var i = cards.indexOf(card);
+  if(i < 0) return;
+  if(Math.abs(norm(state.rot + cardAngle(i))) > 30){
+    e.preventDefault();
+    rotateCardToFront(i);
+  }
+}, true);
+
+stage.addEventListener("mouseenter", function(){ state.hover = true; });
+stage.addEventListener("mouseleave", function(){ state.hover = false; });
+stage.addEventListener("focusin", function(e){
+  state.focusPause = true;
+  var card = e.target.closest(".card");
+  if(card){ var i = cards.indexOf(card); if(i >= 0) rotateCardToFront(i); }
+});
+stage.addEventListener("focusout", function(e){
+  if(!stage.contains(e.relatedTarget)) state.focusPause = false;
+});
+
+/* Auto-rotate loop */
+var lastFrame = performance.now();
+function tick(now){
+  var dt = Math.min(50, now - lastFrame); lastFrame = now;
+  if(!state.dragging){
+    if(Math.abs(state.vel) > 0.002){
+      state.rot += state.vel * (dt / 16.7);
+      state.vel *= Math.pow(0.94, dt / 16.7);
+    } else if(!reduceMotion && !state.focusPause && !document.hidden && now - state.lastInteract > 1200){
+      state.rot -= 0.018 * (dt / 16.7);
+    }
+  }
+  paint();
+  requestAnimationFrame(tick);
+}
+
+render();
+state.lastInteract = performance.now();
+layout();
+paint();
+window.addEventListener("resize", function(){ layout(); paint(); });
+requestAnimationFrame(tick);
+
+/* ---- Entrance animation ---- */
+if(window.gsap && !reduceMotion){
+  gsap.from("#pageHead", {y:16, opacity:0, duration:.6, ease:"power3.out"});
+  gsap.from(state, {rot:-160, duration:1.5, ease:"power3.out"});
+  gsap.from("#orbitControls", {y:12, opacity:0, duration:.55, delay:.35, ease:"power3.out", clearProps:"opacity"});
+}
+
+/* ---- Three.js background: particles + floating wireframes ---- */
+(function(){
+  if(!window.THREE || reduceMotion) return;
+  var canvas = document.getElementById("bg3d");
+  var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true}); } catch(e){ return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(55, 1, .1, 100);
+  camera.position.z = 9;
+
+  var ink = dark ? 0xe4e4e7 : 0x27272a;
+  var accent = dark ? 0xa1a1aa : 0x52525b;
+
+  // Particle field
+  var N = 420, pos = new Float32Array(N*3);
+  for(var i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*22; pos[i*3+1]=(Math.random()-.5)*13; pos[i*3+2]=(Math.random()-.5)*7; }
+  var pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute("position", new THREE.BufferAttribute(pos,3));
+  var points = new THREE.Points(pGeo, new THREE.PointsMaterial({color:accent, size:.045, transparent:true, opacity: dark?.65:.5}));
+  scene.add(points);
+
+  // Floating wireframe shapes
+  var shapes = [];
+  function addShape(geo, x, y, z, s, op){
+    var m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:ink, wireframe:true, transparent:true, opacity:op}));
+    m.position.set(x,y,z); m.scale.setScalar(s); scene.add(m); shapes.push(m); return m;
+  }
+  addShape(new THREE.IcosahedronGeometry(1,0), -5.6, 1.7, -1, 1.15, dark?.20:.13);
+  addShape(new THREE.TorusGeometry(.85,.28,10,28), 5.9, 2.0, -1.5, 1, dark?.18:.11);
+  addShape(new THREE.OctahedronGeometry(1,0), 4.7, -2.4, -.5, .8, dark?.20:.12);
+  addShape(new THREE.BoxGeometry(1.2,1.2,1.2), -4.9, -2.6, -1.2, .9, dark?.16:.10);
+
+  var mx=0, my=0;
+  window.addEventListener("pointermove", function(e){
+    mx = (e.clientX / window.innerWidth - .5);
+    my = (e.clientY / window.innerHeight - .5);
+  }, {passive:true});
+
+  function resize(){
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize); resize();
+
+  var clock = new THREE.Clock();
+  var running = true;
+  document.addEventListener("visibilitychange", function(){ running = !document.hidden; if(running) clock.getDelta(); });
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!running) return;
+    var t = clock.getElapsedTime();
+    points.rotation.y = t * .018;
+    shapes.forEach(function(s, idx){
+      s.rotation.x = t * (.12 + idx*.03);
+      s.rotation.y = t * (.16 + idx*.025);
+      s.position.y += Math.sin(t*.7 + idx*1.7) * .0016;
+    });
+    camera.position.x += ((mx*1.1) - camera.position.x) * .04;
+    camera.position.y += ((-my*.7) - camera.position.y) * .04;
+    camera.lookAt(0,0,0);
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
+</body>
+</html>
