@@ -1,480 +1,2813 @@
-<!doctype html>
-<html lang="vi">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:," />
-<title>Web Tổng Hợp Nhóm 5 — Lập Trình Web</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#fafafa; --surface:#ffffff; --surface-2:#f4f4f5;
-    --border:#e4e4e7; --border-strong:#d4d4d8;
-    --text:#09090b; --muted:#52525b; --muted-2:#71717a;
-    --primary:#09090b; --primary-fg:#fafafa;
-    --badge-bg:#f4f4f5; --badge-text:#27272a;
-    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04);
-    --shadow-hover:0 2px 4px rgba(0,0,0,.06),0 16px 40px rgba(0,0,0,.08);
-    color-scheme:light;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#09090b; --surface:#101012; --surface-2:#18181b;
-      --border:#27272a; --border-strong:#3f3f46;
-      --text:#fafafa; --muted:#d4d4d8; --muted-2:#a1a1aa;
-      --primary:#fafafa; --primary-fg:#09090b;
-      --badge-bg:#27272a; --badge-text:#e4e4e7;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
-      --shadow-hover:0 2px 4px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.45);
-      color-scheme:dark;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOTS — GENERATIVE PARTICLE STORYTELLING | NHÓM 5 COLLECTIVE</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Be Vietnam Pro (900 for crisp Vietnamese Diacritics) & Space Grotesk & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Three.js r128 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'Inter', 'sans-serif'],
+            display: ['"Be Vietnam Pro"', '"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            border: 'rgba(255, 255, 255, 0.09)',
+            surface: 'rgba(10, 12, 18, 0.72)',
+          }
+        }
+      }
     }
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:"Be Vietnam Pro",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  #bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9}
-  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(900px 500px at 15% -5%,rgba(9,9,11,.06),transparent 60%),radial-gradient(800px 500px at 90% 0%,rgba(9,9,11,.05),transparent 60%)}
-  @media (prefers-color-scheme:dark){.veil{background:radial-gradient(900px 500px at 15% -5%,rgba(255,255,255,.07),transparent 60%),radial-gradient(800px 500px at 90% 0%,rgba(255,255,255,.05),transparent 60%)}}
-  .wrap{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:34px 20px 30px}
-  a{color:inherit}
-  .mono{font-family:"JetBrains Mono",monospace}
-  /* Minimal group title */
-  .head{text-align:center;max-width:720px;margin:0 auto}
-  .head .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:6px 11px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted)}
-  .head .pill .dot{width:7px;height:7px;border-radius:50%;background:#16a34a;flex:none}
-  .head .pill strong{color:var(--text);font-weight:700}
-  .head h1{margin:16px 0 0;font-size:clamp(30px,5vw,46px);line-height:1.08;letter-spacing:-.03em;font-weight:800}
-  .head h1 span{white-space:nowrap}
-  .head p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
-  /* 3D orbit stage */
-  .orbit-stage{position:relative;height:520px;margin-top:6px;perspective:1500px;overflow:hidden;cursor:grab;touch-action:pan-y;border-radius:20px}
-  .orbit-stage:active{cursor:grabbing}
-  .orbit-floor{position:absolute;left:50%;bottom:34px;width:min(700px,84%);height:110px;transform:translateX(-50%) rotateX(72deg);border:1px solid var(--border);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.07),transparent 72%);pointer-events:none}
-  @media (prefers-color-scheme:dark){.orbit-floor{background:radial-gradient(closest-side,rgba(255,255,255,.08),transparent 72%)}}
-  .ring{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
-  .hub{position:absolute;left:50%;top:50%;width:108px;height:108px;margin:-54px 0 0 -54px;border-radius:50%;border:1px solid var(--border-strong);background:color-mix(in srgb,var(--surface) 86%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:var(--shadow);will-change:transform}
-  .hub b{font-size:15px;letter-spacing:.04em;line-height:1.2}
-  .hub span{font-size:11px;color:var(--muted-2);font-weight:600}
-  .card{position:absolute;left:50%;top:50%;width:300px;height:284px;margin:-142px 0 0 -150px;border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;will-change:transform,opacity;text-decoration:none}
-  .card.is-front{border-color:var(--border-strong);box-shadow:var(--shadow-hover)}
-  .card:focus-visible{outline:2px solid var(--text);outline-offset:2px}
-  /* Card children are purely visual; the card itself takes every hit so a
-     tap anywhere on the card hits the link, not an inner label */
-  .card *{pointer-events:none}
-  .card-top{display:flex;gap:12px;align-items:center}
-  .avatar{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:18px;letter-spacing:-.02em;flex:none;border:1px solid rgba(0,0,0,.06)}
-  .num{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted-2);font-weight:600}
-  .status{font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:999px;border:1px solid var(--border);white-space:nowrap;display:inline-block;margin-top:5px}
-  .status.ready{background:#dcfce7;color:#166534;border-color:#bbf7d0}
-  @media (prefers-color-scheme:dark){.status.ready{background:#052e16;color:#86efac;border-color:#14532d}}
-  .status.pending{background:var(--badge-bg);color:var(--muted)}
-  .name{margin:18px 0 0;font-size:18.5px;line-height:1.3;letter-spacing:-.015em;font-weight:700;flex:1}
-  .card-foot{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .btn{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;border-radius:9px;padding:9px 13px;border:1px solid transparent;white-space:nowrap}
-  .btn-primary{background:var(--primary);color:var(--primary-fg)}
-  .btn-disabled{background:var(--surface-2);color:var(--muted-2);border-color:var(--border)}
-  .host{font-size:12px;color:var(--muted-2);font-family:"JetBrains Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:118px}
-  /* Orbit controls */
-  .orbit-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:2px;flex-wrap:wrap}
-  .nav-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);flex:none}
-  .nav-btn:hover{border-color:var(--border-strong)}
-  .nav-btn:focus-visible{outline:2px solid var(--text);outline-offset:2px}
-  .hint{font-size:13px;color:var(--muted);text-align:center}
-  @media (max-width:720px){
-    .orbit-stage{height:452px}
-    .card{width:224px;height:262px;margin:-131px 0 0 -112px;padding:16px}
-    .name{font-size:16.5px;margin-top:14px}
-    .hub{width:86px;height:86px;margin:-43px 0 0 -43px}
-    .hub b{font-size:13px}
-    .host{display:none}
-  }
-  @media (max-width:600px){.wrap{padding:24px 14px 24px}}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style>
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #050711;
+      color: #fafafa;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050711;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.75);
+    }
+
+    /* Multi-layered Dynamic Generative Aurora & Cyber Backdrop */
+    #cosmic-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: radial-gradient(circle at 55% 42%, #0d162e 0%, #070a17 52%, #03040a 100%);
+      transition: background 1s ease;
+    }
+    .aurora-orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(88px);
+      opacity: 0.42;
+      mix-blend-mode: screen;
+      transition: background 0.9s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, background;
+    }
+    #aurora-orb-1 {
+      width: 58vw;
+      height: 58vw;
+      max-width: 780px;
+      max-height: 780px;
+      top: -14%;
+      right: -8%;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.55) 0%, rgba(129, 140, 248, 0.18) 55%, transparent 75%);
+      animation: floatOrb1 16s ease-in-out infinite alternate;
+    }
+    #aurora-orb-2 {
+      width: 50vw;
+      height: 50vw;
+      max-width: 680px;
+      max-height: 680px;
+      bottom: -16%;
+      left: -10%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(56, 189, 248, 0.14) 55%, transparent 75%);
+      animation: floatOrb2 20s ease-in-out infinite alternate;
+    }
+    #aurora-orb-3 {
+      width: 38vw;
+      height: 38vw;
+      max-width: 520px;
+      max-height: 520px;
+      top: 28%;
+      left: 38%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+      animation: floatOrb3 14s ease-in-out infinite alternate;
+    }
+    @keyframes floatOrb1 {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(-45px, 35px, 0) scale(1.12); }
+    }
+    @keyframes floatOrb2 {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(55px, -30px, 0) scale(1.15); }
+    }
+    @keyframes floatOrb3 {
+      0% { transform: translate3d(-25px, -15px, 0) scale(0.95); }
+      100% { transform: translate3d(30px, 25px, 0) scale(1.08); }
+    }
+
+    /* Architectural Cyber Grid & Sacred Geometry SVG Reticles */
+    .cyber-grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 85% 75% at 60% 50%, #000 35%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 75% at 60% 50%, #000 35%, transparent 100%);
+    }
+    .sacred-hud-svg {
+      position: fixed;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(68vw, 700px);
+      height: min(68vw, 700px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      animation: slowSpin 75s linear infinite;
+    }
+    @keyframes slowSpin {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    #webgl-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: auto;
+      cursor: grab;
+    }
+    #webgl-container:active {
+      cursor: grabbing;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Clean shadcn/ui Dark Glass Tokens */
+    .shadcn-card {
+      background: rgba(10, 13, 22, 0.78);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+    .shadcn-pill {
+      background: rgba(16, 20, 32, 0.82);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .shadcn-pill:hover {
+      background: rgba(30, 38, 58, 0.92);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+    .shadcn-btn-primary {
+      background: #fafafa;
+      color: #09090b;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .shadcn-btn-primary:hover {
+      background: #e4e4e7;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.22);
+    }
+    .shadcn-btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #f4f4f5;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      transition: all 0.2s ease;
+    }
+    .shadcn-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #scroll-track {
+      position: relative;
+      width: 100%;
+      height: 1250vh;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ui-interactive {
+      pointer-events: auto;
+    }
+
+    .film-grain {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
+      background-size: 24px 24px;
+      opacity: 0.32;
+    }
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 58% 48%, transparent 48%, rgba(3, 5, 12, 0.72) 100%);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
-<body>
-<canvas id="bg3d" aria-hidden="true"></canvas>
-<div class="veil" aria-hidden="true"></div>
+<body class="font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
 
-<div class="wrap">
-  <header class="head" id="pageHead">
-    <span class="pill"><span class="dot"></span> Môn <strong>Lập trình Web</strong> · Nhóm <strong>5</strong></span>
-    <h1>Tổng hợp portfolio <span>Nhóm 5</span></h1>
-    <p>GVHD ThS. Trần Thịnh Mạnh Đức · 6 thành viên</p>
-  </header>
+  <!-- ==================== DYNAMIC MULTI-LAYERED COSMIC & SACRED GEOMETRY BACKDROP ==================== -->
+  <div id="cosmic-backdrop" aria-hidden="true">
+    <div id="aurora-orb-1" class="aurora-orb"></div>
+    <div id="aurora-orb-2" class="aurora-orb"></div>
+    <div id="aurora-orb-3" class="aurora-orb"></div>
+  </div>
+  <div class="cyber-grid-overlay" aria-hidden="true"></div>
+  <!-- Rotating Sacred Geometry HUD Reticle behind the 3D Sculpture -->
+  <svg class="sacred-hud-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="300" cy="300" r="280" stroke="url(#hudGrad)" stroke-width="1" stroke-dasharray="6 10"/>
+    <circle cx="300" cy="300" r="235" stroke="url(#hudGrad)" stroke-width="0.8" stroke-opacity="0.6"/>
+    <circle cx="300" cy="300" r="180" stroke="url(#hudGrad)" stroke-width="1" stroke-dasharray="2 8"/>
+    <polygon points="300,35 530,432 70,432" stroke="url(#hudGrad)" stroke-width="0.6" stroke-opacity="0.45"/>
+    <polygon points="300,565 530,168 70,168" stroke="url(#hudGrad)" stroke-width="0.6" stroke-opacity="0.45"/>
+    <line x1="20" y1="300" x2="580" y2="300" stroke="url(#hudGrad)" stroke-width="0.5" stroke-opacity="0.35"/>
+    <line x1="300" y1="20" x2="300" y2="580" stroke="url(#hudGrad)" stroke-width="0.5" stroke-opacity="0.35"/>
+    <defs>
+      <linearGradient id="hudGrad" x1="0" y1="0" x2="600" y2="600" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="50%" stop-color="#c084fc"/>
+        <stop offset="100%" stop-color="#f472b6"/>
+      </linearGradient>
+    </defs>
+  </svg>
 
-  <main>
-    <div class="orbit-stage" id="orbitStage" aria-label="Vòng xoay 3D các thẻ thành viên Nhóm 5">
-      <div class="orbit-floor" aria-hidden="true"></div>
-      <div class="ring" id="orbitRing">
-        <div class="hub" id="orbitHub" aria-hidden="true"><b>NHÓM 5</b><span>6 thành viên</span></div>
+  <!-- 3D WebGL Particle Stage -->
+  <div id="webgl-container" aria-label="Interactive 3D Generative Particle Canvas"></div>
+
+  <!-- Atmospheric Overlays -->
+  <div class="vignette"></div>
+  <div class="film-grain"></div>
+
+  <!-- Toast Notification (for Copy Link / Beast Summon) -->
+  <div id="shadcn-toast" class="fixed top-20 right-5 z-50 pointer-events-none opacity-0 translate-y-[-10px] transition-all duration-300">
+    <div class="shadcn-card px-4 py-3 rounded-xl border border-cyan-500/40 flex items-center gap-3 shadow-2xl">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+      <div>
+        <div id="toast-title" class="font-display text-xs font-bold text-white">Đã kích hoạt hiệu ứng</div>
+        <div id="toast-desc" class="font-mono text-[11px] text-zinc-400">55,000 hạt đang tái cấu trúc...</div>
       </div>
     </div>
+  </div>
 
-    <div class="orbit-controls" id="orbitControls">
-      <button class="nav-btn" id="prevBtn" type="button" aria-label="Thẻ trước">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-      </button>
-      <span class="hint">Kéo để xoay vòng thẻ · Bấm thẻ ở mặt trước để mở portfolio</span>
-      <button class="nav-btn" id="nextBtn" type="button" aria-label="Thẻ tiếp theo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+  <!-- WebGL Fallback Notice -->
+  <div id="webgl-fallback" class="hidden fixed inset-0 z-50 bg-[#040508] flex flex-col items-center justify-center p-6 text-center">
+    <div class="max-w-xl shadcn-card p-8 rounded-2xl border border-red-500/30">
+      <h1 class="font-display text-2xl font-bold mb-2">WebGL Hardware Acceleration Required</h1>
+      <p class="text-sm text-zinc-400 mb-6">Trình duyệt cần bật WebGL để hiển thị 80,000 hạt 3D. Dưới đây là danh sách Portfolio chính thức của Nhóm 5:</p>
+      <div id="fallback-member-list" class="text-left space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+    </div>
+  </div>
+
+  <!-- ==================== FLOATING TOP SHADCN HUD BAR ==================== -->
+  <header class="fixed top-0 left-0 right-0 z-30 p-2.5 sm:p-4 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+    <!-- Left: Collective Brand + Chapter Status + Directory Trigger -->
+    <div class="ui-interactive flex items-center gap-2">
+      <div class="shadcn-card px-3.5 py-2 rounded-xl flex items-center gap-2.5">
+        <span class="relative flex h-2.5 w-2.5">
+          <span id="hud-accent-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span id="hud-accent-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400"></span>
+        </span>
+        <button onclick="scrollToChapter(1)" class="font-display font-bold tracking-wider text-xs sm:text-sm text-white hover:text-cyan-300 transition flex items-center gap-1.5">
+          <span>NHÓM 5</span>
+          <span class="text-zinc-600 font-normal">/</span>
+          <span class="font-mono text-[11px] text-cyan-300">DOTS.COLLECTIVE</span>
+        </button>
+        <span class="hidden lg:inline-block h-3.5 w-[1px] bg-white/10"></span>
+        <span id="hud-state-label" class="hidden lg:inline-block font-mono text-[11px] text-zinc-300 uppercase tracking-wider">
+          00 · KHỞI NGUYÊN HẠT
+        </span>
+      </div>
+
+      <!-- Button: Open Full 6-Member Shadcn Directory & Table Modal -->
+      <button onclick="openDirectoryModal()" class="shadcn-pill px-3.5 py-2 rounded-xl font-sans text-xs font-medium text-white flex items-center gap-2 border-cyan-500/30 hover:border-cyan-400">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span>Bảng Thành Viên Nhóm 5</span>
+        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">6 Profile</span>
       </button>
     </div>
-  </main>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script>
-/*
-  ============================================================
-  CẬU CHỈ CẦN SỬA Ở ĐÂY KHI CÓ LINK:
-  Dán link portfolio vào trường url của từng bạn, lưu lại là
-  thẻ tự bật thành link bấm được.
-  Ví dụ: url: "https://example.com/portfolio-an"
-  Để trống "" thì thẻ hiện trạng thái "Sắp cập nhật".
-  ============================================================
-*/
-var MEMBERS = [
-  { id:"an",        num:"01", name:"Đặng Hoàng Ân",         initials:"Â",  color:"#09090b", colorFg:"#fafafa", url:"https://kaiyodev.github.io/portfolio-an/" },
-  { id:"hainam",    num:"02", name:"Phan Hải Nam",          initials:"HN", color:"#fef3c7", colorFg:"#92400e", url:"https://namph1377-sketch.github.io/Portfolio/" },
-  { id:"nhatdinh",  num:"03", name:"Lê Nguyễn Nhật Đình",   initials:"NĐ", color:"#dbeafe", colorFg:"#1e40af", url:"https://roxy2434.github.io/Portfolio/" },
-  { id:"minhthu",   num:"04", name:"Nguyễn Ngọc Minh Thư",  initials:"MT", color:"#fce7f3", colorFg:"#9d174d", url:"https://minhthu2025.github.io/Aboutme/" },
-  { id:"quynhnghi", num:"05", name:"Nguyễn Lưu Quỳnh Nghi", initials:"QN", color:"#dcfce7", colorFg:"#166534", url:"https://ak98587.github.io/portfolio/" },
-  { id:"hoanganh",  num:"06", name:"Nguyễn Hoàng Anh",      initials:"HA", color:"#ede9fe", colorFg:"#5b21b6", url:"https://hoanhh4977.github.io/Portfolio/" }
-];
+    <!-- Center: Live GPU Particle Telemetry -->
+    <div class="hidden 2xl:flex items-center gap-4 shadcn-card px-4 py-2 rounded-xl font-mono text-[11px] text-zinc-400">
+      <div>HẠT (DOTS): <span id="telemetry-count" class="text-white font-semibold">80,000</span></div>
+      <div class="h-3 w-[1px] bg-white/10"></div>
+      <div>LINH THÚ: <span id="telemetry-beast" class="text-cyan-300 font-semibold">ORIGIN</span></div>
+      <div class="h-3 w-[1px] bg-white/10"></div>
+      <div>MORPH: <span id="telemetry-morph" class="text-fuchsia-300">0.00</span></div>
+      <div class="h-3 w-[1px] bg-white/10"></div>
+      <div>FPS: <span id="telemetry-fps" class="text-emerald-400">60</span></div>
+    </div>
 
-var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-var stage = document.getElementById("orbitStage");
-var ring = document.getElementById("orbitRing");
-var hub = document.getElementById("orbitHub");
-var cards = [];
+    <!-- Right: Particle Density (35K/55K/80K), Name Focus, Shader Color FX, Mouse Force, Pulse -->
+    <div class="ui-interactive flex flex-wrap items-center gap-1.5">
+      <!-- Particle Density Selector -->
+      <div class="shadcn-card rounded-xl p-1 flex items-center text-[11px] font-mono" title="Mật độ hạt 3D">
+        <button data-quality="35000" onclick="setParticleQuality(35000)" class="quality-btn px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">35K</button>
+        <button data-quality="55000" onclick="setParticleQuality(55000)" class="quality-btn px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">55K</button>
+        <button data-quality="80000" onclick="setParticleQuality(80000)" class="quality-btn px-2 py-1 rounded-lg bg-white/15 text-white font-semibold transition">80K★</button>
+      </div>
 
-function hostOf(url){ try { return new URL(url).hostname.replace(/^www\./,""); } catch(e){ return ""; } }
+      <!-- Highlight 3D Particle Name Typography Toggle -->
+      <button id="btn-name-glow" onclick="toggleNameTypographyGlow()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-emerald-300 hover:text-white flex items-center gap-1.5" title="Làm nổi bật Chữ Hạt Tên Thành Viên 3D">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="name-glow-label">CHỮ HẠT: NỔI BẬT</span>
+      </button>
 
-function svgIcon(){
-  var NS = "http://www.w3.org/2000/svg";
-  var svg = document.createElementNS(NS, "svg");
-  svg.setAttribute("width", "14");
-  svg.setAttribute("height", "14");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2.2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  ["M7 17L17 7", "M8 7h9v9"].forEach(function(d){
-    var p = document.createElementNS(NS, "path");
-    p.setAttribute("d", d);
-    svg.appendChild(p);
-  });
-  return svg;
-}
+      <!-- Shader Color FX Mode Cycle -->
+      <button id="btn-fx-mode" onclick="cycleColorFXMode()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-fuchsia-300 hover:text-white flex items-center gap-1.5" title="Đổi hiệu ứng màu Shader">
+        <span class="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-400"></span>
+        <span id="fx-mode-label">FX: NGUYÊN BẢN</span>
+      </button>
 
-function safeOpen(raw){
-  var url = String(raw == null ? "" : raw);
-  /* Only allow URLs explicitly written as absolute "https://". Protocol-relative
-     ("//x"), relative paths, and other schemes are all rejected. */
-  if(url.slice(0, 8) !== "https://") return;
-  var u;
-  try { u = new URL(url); } catch(e){ return; }
-  if(!u.hostname) return;
-  /* Programmatic anchor click: opens exactly once from the click gesture,
-     and rel="noopener" keeps the new tab from reaching this page via window.opener. */
-  var a = document.createElement("a");
-  a.href = u.href;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+      <!-- Mouse Force Mode Toggle (Repel vs Blackhole Vortex) -->
+      <button id="btn-mouse-mode" onclick="toggleMouseForceMode()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-amber-300 hover:text-white hidden sm:flex items-center gap-1.5" title="Chế độ tương tác chuột">
+        <span id="mouse-mode-label">CHUỘT: ĐẨY SÓNG</span>
+      </button>
 
-function render(){
-  MEMBERS.forEach(function(m){
-    var has = !!m.url;
-    var card = document.createElement(has ? "a" : "article");
-    card.className = "card";
-    card.setAttribute("aria-label", has ? "Mở portfolio của " + m.name : m.name + " — chưa có link portfolio");
-    if(has){
-      card.setAttribute("href", m.url);
-      card.setAttribute("target", "_blank");
-      card.setAttribute("rel", "noopener noreferrer");
+      <!-- Supernova Shockwave Pulse -->
+      <button onclick="triggerParticleBurst(1.1)" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-cyan-300 hover:text-white flex items-center gap-1" title="Phát nổ & Tái tạo hạt">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span class="hidden md:inline">BÙNG NỔ</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== RIGHT-HAND TIMELINE SCRUBBER RAIL ==================== -->
+  <aside class="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-end gap-2 pointer-events-none">
+    <div class="ui-interactive shadcn-card py-3 px-2.5 rounded-2xl flex flex-col items-center gap-2.5">
+      <div class="font-mono text-[10px] text-zinc-400 tracking-tighter" id="rail-percent">00%</div>
+      <div class="relative w-1.5 h-48 bg-white/10 rounded-full overflow-hidden">
+        <div id="rail-progress-bar" class="w-full bg-gradient-to-b from-cyan-400 via-fuchsia-400 to-amber-400 rounded-full transition-all duration-75" style="height: 0%"></div>
+      </div>
+      <div id="rail-nodes" class="flex flex-col gap-1.5 pt-1"></div>
+    </div>
+  </aside>
+
+  <!-- ==================== ULTRA-CLEAN COMPACT SHADCN/UI MEMBER PROFILE CARD (LEFT SIDE) ==================== -->
+  <section id="member-dossier-wrapper" class="fixed left-3 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 z-20 w-[calc(100vw-1.5rem)] sm:w-[370px] pointer-events-none transition-all duration-500 opacity-0 translate-y-4">
+    <div class="ui-interactive shadcn-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+      <!-- Top Gradient Bar -->
+      <div id="dossier-accent-bar" class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-violet-400 to-transparent"></div>
+
+      <!-- Compact Top Row: Member Badge + Beast Pill + Prev/Next -->
+      <div class="flex items-center justify-between gap-2 mb-3.5">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span id="dossier-index" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-white/10 text-cyan-300 font-semibold border border-white/10">
+            01 / 06
+          </span>
+          <span id="dossier-sculpture-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-200 border border-cyan-500/25">
+            🐉 LONG THẦN
+          </span>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="stepChapter(-1)" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 border border-white/10 transition" title="Thành viên trước">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button onclick="stepChapter(1)" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 border border-white/10 transition" title="Thành viên tiếp theo">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Identity Row: Avatar Slot (with Edit/Upload trigger) + Name & Academic Role -->
+      <div class="flex items-center gap-3.5 mb-3.5">
+        <div class="relative group shrink-0">
+          <div id="dossier-avatar-ring" class="w-16 h-16 rounded-2xl p-[2px] bg-gradient-to-br from-cyan-400 via-violet-500 to-amber-300 shadow-lg">
+            <img id="dossier-avatar-img"
+                 src="https://placehold.co/200x200/0b132b/22d3ee?text=HA"
+                 alt="Member Avatar"
+                 onerror="this.src='https://placehold.co/200x200/0f172a/38bdf8?text=N5'"
+                 class="w-full h-full object-cover rounded-[14px] bg-zinc-900" />
+          </div>
+          <button onclick="openAvatarEditorModal()"
+                  title="Đổi ảnh Avatar (Dán link hoặc Tải ảnh lên)"
+                  class="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-md bg-zinc-900/95 hover:bg-cyan-500 text-zinc-200 hover:text-black border border-white/20 font-mono text-[9px] font-semibold flex items-center gap-0.5 shadow-md transition">
+            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>AVT</span>
+          </button>
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <h2 id="dossier-name" class="font-display text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight truncate">
+            ĐẶNG HOÀNG ÂN
+          </h2>
+          <div id="dossier-role" class="font-mono text-xs text-cyan-300 font-semibold mt-0.5 leading-snug">
+            CNTT, Khoa học dữ liệu & AI, K24
+          </div>
+          <div class="flex items-center gap-1.5 mt-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span id="dossier-particle-status" class="font-mono text-[10px] text-zinc-400">Chữ hạt 3D: ĐẶNG HOÀNG ÂN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Concise 1-Line Tagline (No Long Paragraph) -->
+      <p id="dossier-tagline" class="text-xs text-zinc-300 leading-relaxed mb-3 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.07]">
+        Nghiên cứu Deep Learning, Computer Vision & Hệ thống AI thông minh.
+      </p>
+
+      <!-- Compact Top Skills Pills (Max 4 clean pills) -->
+      <div id="dossier-skills" class="flex flex-wrap gap-1.5 mb-4"></div>
+
+      <!-- Clean Action Row: Open Portfolio + Details Modal + Copy Link -->
+      <div class="flex items-center gap-2 pt-3 border-t border-white/10">
+        <a id="dossier-portfolio-btn" href="https://kaiyodev.github.io/portfolio-an/" target="_blank" rel="noopener noreferrer"
+           class="flex-1 shadcn-btn-primary py-2.5 px-3.5 rounded-xl font-sans text-xs flex items-center justify-center gap-1.5 text-center">
+          <span>Mở Portfolio</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <button onclick="openMemberSheetModal(currentActiveMemberIndex)"
+                title="Xem dự án & thông tin chi tiết"
+                class="shadcn-btn-secondary py-2.5 px-3 rounded-xl font-sans text-xs font-medium flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Chi Tiết</span>
+        </button>
+        <button onclick="copyActiveMemberLink()"
+                title="Copy Link Portfolio"
+                class="shadcn-btn-secondary p-2.5 rounded-xl text-zinc-300 hover:text-white flex items-center justify-center">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CLOSING COLLECTIVE FINALE OVERLAY (88-100%) ==================== -->
+  <section id="finale-overlay" class="fixed right-3 sm:right-14 bottom-20 z-20 max-w-lg pointer-events-none opacity-0 translate-y-4 transition-all duration-500">
+    <div class="ui-interactive shadcn-card rounded-2xl p-5 sm:p-6 border border-white/15">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-mono text-[11px] text-amber-300 uppercase tracking-widest">08 · ĐẠI HỘI TỤ NHÓM 5</span>
+        <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-white/10 text-zinc-300">6 Thành Viên · 1 Hệ Hạt</span>
+      </div>
+      <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Nhóm 5 — Lục Linh Hội Tụ</h3>
+      <p class="text-xs text-zinc-300 leading-relaxed mb-3.5">
+        Từ chữ <strong>PORTFOLIO NHÓM 5</strong> mở màn cho đến <strong>Long Thần, Kỳ Lân, Bạch Hổ, Phượng Hoàng, Hồ Điệp</strong> và <strong>Cửu Vĩ Linh Hồ</strong> — tất cả đều biến hình từ cùng một trường hạt duy nhất.
+      </p>
+      <div id="finale-member-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4"></div>
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/10">
+        <button onclick="openDirectoryModal()" class="shadcn-btn-primary px-4 py-2 rounded-xl text-xs flex items-center gap-1.5">
+          <span>Xem Bảng Tổng Hợp 6 Hồ Sơ</span>
+        </button>
+        <button onclick="scrollToChapter(0)" class="shadcn-btn-secondary px-3.5 py-2 rounded-xl text-xs font-mono">
+          ↑ Về Đầu Trang
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SINGLE CLEAN FLOATING BOTTOM CHAPTER DOCK ==================== -->
+  <nav aria-label="Chapter Navigation" class="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 w-auto max-w-[96vw] pointer-events-none">
+    <div class="ui-interactive shadcn-card px-2 py-1.5 rounded-2xl flex items-center gap-1 overflow-x-auto no-scrollbar border border-white/15 shadow-2xl">
+      <button onclick="scrollToChapter(0)" data-dock="0" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] bg-white/15 text-white font-semibold transition">01 · NHÓM 5</button>
+      <button onclick="scrollToChapter(1)" data-dock="1" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🐉 Hoàng Ân</button>
+      <button onclick="scrollToChapter(2)" data-dock="2" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🦌 Hải Nam</button>
+      <button onclick="scrollToChapter(3)" data-dock="3" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🐯 Nhật Đình</button>
+      <button onclick="scrollToChapter(4)" data-dock="4" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🦅 Minh Thư</button>
+      <button onclick="scrollToChapter(5)" data-dock="5" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🦋 Quỳnh Nghi</button>
+      <button onclick="scrollToChapter(6)" data-dock="6" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-zinc-300 hover:text-white transition">🦊 Hoàng Anh</button>
+      <button onclick="summonBeastMode(8)" id="beast-btn-8" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-amber-300 hover:text-white transition">🐟 Cá Chép</button>
+      <button onclick="scrollToChapter(7)" data-dock="7" class="dock-btn shrink-0 px-3 py-1.5 rounded-xl font-mono text-[11px] text-cyan-300 hover:text-white transition">✦ Hợp Nhất</button>
+    </div>
+  </nav>
+
+  <!-- ==================== SHADCN/UI MODAL 1: DETAILED MEMBER SHEET ==================== -->
+  <div id="project-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="ui-interactive shadcn-card max-w-2xl w-full rounded-2xl p-6 sm:p-7 border border-white/15 shadow-2xl relative max-h-[88vh] overflow-y-auto">
+      <button onclick="closeProjectModal()" class="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="flex items-center gap-4 mb-4">
+        <img id="modal-member-avatar" src="https://placehold.co/200x200/0b132b/22d3ee?text=HA" alt="Avatar" class="w-16 h-16 rounded-2xl object-cover border border-white/15 bg-zinc-900 shrink-0" />
+        <div>
+          <div id="modal-member-tag" class="font-mono text-xs text-cyan-400 uppercase tracking-widest mb-0.5">THÀNH VIÊN 01 // HỒ SƠ CHI TIẾT</div>
+          <h3 id="modal-member-name" class="font-display text-2xl font-bold text-white">ĐẶNG HOÀNG ÂN</h3>
+          <p id="modal-member-role" class="font-mono text-xs text-zinc-300 mt-0.5"></p>
+        </div>
+      </div>
+
+      <p id="modal-member-bio" class="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-4"></p>
+
+      <div class="rounded-xl border border-white/10 overflow-hidden mb-5 bg-black/30">
+        <table class="w-full text-left border-collapse text-xs">
+          <tbody class="divide-y divide-white/10">
+            <tr>
+              <th class="py-2.5 px-3.5 font-mono text-zinc-400 bg-white/[0.02] w-1/3">Họ và Tên</th>
+              <td id="table-member-name" class="py-2.5 px-3.5 font-semibold text-white"></td>
+            </tr>
+            <tr>
+              <th class="py-2.5 px-3.5 font-mono text-zinc-400 bg-white/[0.02]">Chuyên Ngành & Khóa</th>
+              <td id="table-member-role" class="py-2.5 px-3.5 text-cyan-300 font-mono"></td>
+            </tr>
+            <tr>
+              <th class="py-2.5 px-3.5 font-mono text-zinc-400 bg-white/[0.02]">Linh Thú Hạt 3D</th>
+              <td id="table-member-beast" class="py-2.5 px-3.5 text-zinc-200 font-mono"></td>
+            </tr>
+            <tr>
+              <th class="py-2.5 px-3.5 font-mono text-zinc-400 bg-white/[0.02]">Website Cá Nhân</th>
+              <td class="py-2.5 px-3.5 font-mono">
+                <a id="table-member-link" href="#" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline break-all"></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="modal-projects-list" class="space-y-3 mb-6"></div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/10">
+        <a id="modal-portfolio-link" href="#" target="_blank" rel="noopener noreferrer" class="shadcn-btn-primary px-5 py-2.5 rounded-xl text-xs flex items-center gap-2">
+          <span>Truy Cập Portfolio Chính Thức</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+        <div class="flex items-center gap-2">
+          <button onclick="openAvatarEditorModal(currentActiveMemberIndex)" class="shadcn-btn-secondary px-3.5 py-2 rounded-xl text-xs font-mono">
+            Đổi Avatar
+          </button>
+          <button onclick="closeProjectModal()" class="shadcn-btn-secondary px-4 py-2 rounded-xl text-xs font-mono">
+            Đóng [ESC]
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SHADCN/UI MODAL 3: QUICK AVATAR UPLOAD / LINK PASTE ==================== -->
+  <div id="avatar-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="ui-interactive shadcn-card max-w-md w-full rounded-2xl p-6 border border-white/15 shadow-2xl relative">
+      <button onclick="closeAvatarEditorModal()" class="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="font-mono text-[10px] text-cyan-400 uppercase tracking-widest mb-1">CẬP NHẬT ẢNH ĐẠI DIỆN (AVATAR)</div>
+      <h3 id="avatar-modal-member-name" class="font-display text-xl font-bold text-white mb-4">ĐẶNG HOÀNG ÂN</h3>
+
+      <div class="flex items-center gap-4 mb-4 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+        <img id="avatar-modal-preview" src="https://placehold.co/200x200/0b132b/22d3ee?text=HA" alt="Preview" class="w-16 h-16 rounded-2xl object-cover border border-white/15 bg-zinc-900 shrink-0" />
+        <div class="text-xs text-zinc-300 leading-relaxed">
+          Bạn có thể <strong>dán trực tiếp link ảnh</strong> (Discord, Imgur, GitHub, Postimages...) hoặc <strong>chọn ảnh từ máy</strong>. Bạn cũng có thể sửa sẵn ở biến <code class="text-cyan-300 font-mono">avatar</code> ngay đầu file HTML.
+        </div>
+      </div>
+
+      <!-- Option 1: Paste URL -->
+      <label class="block font-mono text-[10px] uppercase text-zinc-400 mb-1.5">Cách 1: Dán Link Ảnh (URL)</label>
+      <input id="avatar-url-input" type="url" placeholder="https://i.imgur.com/your-avatar.jpg"
+             class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white font-mono focus:outline-none focus:border-cyan-400 mb-3" />
+
+      <!-- Option 2: Upload Local Image File -->
+      <label class="block font-mono text-[10px] uppercase text-zinc-400 mb-1.5">Cách 2: Hoặc tải ảnh từ máy tính</label>
+      <input id="avatar-file-input" type="file" accept="image/*" onchange="handleAvatarFileUpload(event)"
+             class="w-full text-xs text-zinc-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 mb-5 cursor-pointer" />
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+        <button onclick="closeAvatarEditorModal()" class="shadcn-btn-secondary px-4 py-2 rounded-xl text-xs font-mono">
+          Hủy
+        </button>
+        <button onclick="saveAvatarUrlFromModal()" class="shadcn-btn-primary px-4 py-2 rounded-xl text-xs">
+          Lưu Avatar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SHADCN/UI MODAL 2: FULL NHÓM 5 DIRECTORY & CLEAN TABLE ==================== -->
+  <div id="directory-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md">
+    <div class="ui-interactive shadcn-card max-w-5xl w-full rounded-2xl p-5 sm:p-7 border border-white/15 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-4 pb-4 mb-5 border-b border-white/10">
+        <div>
+          <div class="font-mono text-xs text-cyan-400 uppercase tracking-widest">PORTFOLIO DIRECTORY // NHÓM 5 COLLECTIVE</div>
+          <h3 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">Bảng Tổng Hợp 6 Thành Viên & Linh Thú Hạt 3D</h3>
+        </div>
+        <button onclick="closeDirectoryModal()" class="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Clean Shadcn Table View -->
+      <div class="rounded-xl border border-white/10 overflow-x-auto mb-6 bg-black/40">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-white/10 bg-white/[0.04] font-mono text-[11px] text-zinc-400 uppercase">
+              <th class="py-3 px-4">#</th>
+              <th class="py-3 px-4">Họ và Tên</th>
+              <th class="py-3 px-4">Chuyên Ngành / Định Hướng</th>
+              <th class="py-3 px-4">Linh Thú 3D</th>
+              <th class="py-3 px-4">Link Portfolio</th>
+              <th class="py-3 px-4 text-right">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="directory-table-body" class="divide-y divide-white/10"></tbody>
+        </table>
+      </div>
+
+      <!-- 6 Member Shadcn Cards Grid -->
+      <div id="directory-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+    </div>
+  </div>
+
+  <!-- Virtual Scroll Track -->
+  <main id="scroll-track" aria-hidden="true"></main>
+
+  <!-- ==================== APPLICATION & PARTICLE ENGINE SCRIPT ==================== -->
+  <script>
+    /*****************************************************************************************
+     * ★ 0. CẤU HÌNH NHANH (QUICK EDIT CONFIGURATION) — CHỈNH SỬA LINK & AVATAR TẠI ĐÂY ★
+     * Bạn chỉ cần upload ảnh lấy link rồi dán vào thuộc tính `avatar: "https://..."` bên dưới!
+     *****************************************************************************************/
+    const PORTFOLIO_CONFIG = {
+      collectiveTitleLine1: "PORTFOLIO",
+      collectiveTitleLine2: "NHÓM 5",
+      collectiveSubtitle: "SIX MINDS · GENERATIVE PARTICLE COLLECTIVE",
+      defaultParticleCount: 80000,
+      maxParticleCount: 80000,
+
+      members: [
+        {
+          index: 0,
+          chapterNum: "01",
+          name: "ĐẶNG HOÀNG ÂN",
+          role: "CNTT, Khoa học dữ liệu & AI, K24",
+          shortFocus: "Data Science & AI",
+          cohort: "K24 · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA ĐẶNG HOÀNG ÂN VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/081c24/22d3ee?text=HOANG+AN",
+          portfolioUrl: "https://kaiyodev.github.io/portfolio-an/",
+          sculptureName: "🐉 LONG THẦN & NGỌC AI",
+          paletteLabel: "Cyan, Electric Violet & Liquid Silver",
+          accent: "#22d3ee",
+          bgOrb1: "rgba(34, 211, 238, 0.55)",
+          bgOrb2: "rgba(139, 92, 246, 0.45)",
+          gradient: "from-cyan-400 via-violet-400 to-slate-200",
+          tagline: "Chuyên sâu Deep Learning, Computer Vision & Hệ thống Trí tuệ nhân tạo.",
+          bio: "Sinh viên CNTT, Khoa học dữ liệu & AI (K24). Chuyên sâu về kiến trúc Deep Learning, Thị giác máy tính (Computer Vision), mô hình sinh (Generative AI) và tối ưu hóa thuật toán thông minh.",
+          skills: ["Python / PyTorch", "Data Science & AI", "Computer Vision", "Deep Learning"],
+          projects: [
+            {
+              title: "AI & Computer Vision System",
+              summary: "Nghiên cứu và huấn luyện mạng nơ-ron tích chập & Transformer nhận diện, phân tích dữ liệu thị giác thời gian thực.",
+              metrics: "Độ chính xác cao · Tối ưu hóa GPU Inference",
+              stack: ["PyTorch", "OpenCV", "Python", "Deep Learning"]
+            },
+            {
+              title: "Predictive Data Science Pipeline",
+              summary: "Xây dựng quy trình khai phá dữ liệu, tiền xử lý đặc trưng và mô hình học máy dự báo đa chiều.",
+              metrics: "End-to-End Analytics · Automated Feature Engineering",
+              stack: ["Scikit-Learn", "Pandas", "Data Visualization"]
+            }
+          ]
+        },
+        {
+          index: 1,
+          chapterNum: "02",
+          name: "PHAN HẢI NAM",
+          role: "Khoa học dữ liệu, định hướng DA / BA",
+          shortFocus: "Data / Business Analyst",
+          cohort: "Data Science · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA PHAN HẢI NAM VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/06241c/10b981?text=HAI+NAM",
+          portfolioUrl: "https://namph1377-sketch.github.io/Portfolio/",
+          sculptureName: "🦌 KỲ LÂN & NÃO DỮ LIỆU",
+          paletteLabel: "Emerald Green, Electric Blue & Mint",
+          accent: "#10b981",
+          bgOrb1: "rgba(16, 185, 129, 0.52)",
+          bgOrb2: "rgba(14, 165, 233, 0.45)",
+          gradient: "from-emerald-400 via-teal-400 to-sky-500",
+          tagline: "Chuyển hóa dữ liệu lớn thành chiến lược BI, Dashboard & quyết định kinh doanh.",
+          bio: "Chuyên ngành Khoa học dữ liệu với định hướng chuyên sâu Data Analyst (DA) & Business Analyst (BA). Biến dữ liệu thô thành chiến lược kinh doanh, báo cáo BI trực quan và mô hình ra quyết định.",
+          skills: ["SQL / Database", "PowerBI / Tableau", "Python Analytics", "Business Analysis"],
+          projects: [
+            {
+              title: "Executive Business Intelligence Dashboard",
+              summary: "Hệ thống phân tích KPI doanh thu, hành vi khách hàng và tối ưu hóa chuyển đổi đa kênh trực quan.",
+              metrics: "Phân tích đa chiều · Tự động hóa báo cáo quản trị",
+              stack: ["PowerBI", "SQL", "Python", "DAX"]
+            },
+            {
+              title: "Customer Segmentation & Retention Analytics",
+              summary: "Phân cụm khách hàng RFM kết hợp phân tích dữ liệu lịch sử nhằm đề xuất chiến lược giữ chân người dùng.",
+              metrics: "Tối ưu hóa CLV · Insight định lượng rõ ràng",
+              stack: ["Python", "Pandas", "Seaborn", "Business Analysis"]
+            }
+          ]
+        },
+        {
+          index: 2,
+          chapterNum: "03",
+          name: "LÊ NGUYỄN NHẬT ĐÌNH",
+          role: "Smart Logistics, K24",
+          shortFocus: "Smart Logistics",
+          cohort: "K24 · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA LÊ NGUYỄN NHẬT ĐÌNH VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/261405/f97316?text=NHAT+DINH",
+          portfolioUrl: "https://roxy2434.github.io/Portfolio/",
+          sculptureName: "🐯 BẠCH HỔ CƠ KHÍ",
+          paletteLabel: "Solar Orange, Cyber Cyan & Titanium",
+          accent: "#f97316",
+          bgOrb1: "rgba(249, 115, 22, 0.52)",
+          bgOrb2: "rgba(6, 182, 212, 0.42)",
+          gradient: "from-orange-400 via-amber-400 to-cyan-400",
+          tagline: "Tối ưu hóa chuỗi cung ứng thông minh, quy hoạch vận tải VRP & kho vận số.",
+          bio: "Sinh viên Smart Logistics K24. Tập trung vào tối ưu hóa chuỗi cung ứng thông minh, quy hoạch tuyến đường vận tải (VRP), tự động hóa kho vận và ứng dụng IoT / dữ liệu trong hậu cần hiện đại.",
+          skills: ["Smart Supply Chain", "Logistics Routing", "Warehouse Tech", "Data Operations"],
+          projects: [
+            {
+              title: "Smart Urban Route Optimization (VRP)",
+              summary: "Mô hình tối ưu hóa lộ trình giao nhận đa điểm giúp giảm thiểu chi phí nhiên liệu và thời gian vận chuyển đô thị.",
+              metrics: "Giảm thời gian toàn trình · Tối ưu tải trọng đội xe",
+              stack: ["Operations Research", "Smart Logistics", "GIS", "Python"]
+            },
+            {
+              title: "Automated Warehouse Inventory Flow",
+              summary: "Thiết kế luồng điều phối hàng hóa thông minh và dự báo tồn kho an toàn theo thời gian thực.",
+              metrics: "Chuẩn hóa quy trình WMS · Giảm tồn kho chết",
+              stack: ["Supply Chain", "Data Modeling", "Warehouse Tech"]
+            }
+          ]
+        },
+        {
+          index: 3,
+          chapterNum: "04",
+          name: "NGUYỄN NGỌC MINH THƯ",
+          role: "Khoa học dữ liệu, định hướng Frontend",
+          shortFocus: "Data Science & Frontend",
+          cohort: "Data Science · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA NGUYỄN NGỌC MINH THƯ VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/290d24/f472b6?text=MINH+THU",
+          portfolioUrl: "https://minhthu2025.github.io/Aboutme/",
+          sculptureName: "🦅 PHƯỢNG HOÀNG LỬA",
+          paletteLabel: "Rose Pink, Lavender & Pearl Gold",
+          accent: "#f472b6",
+          bgOrb1: "rgba(244, 114, 182, 0.52)",
+          bgOrb2: "rgba(192, 132, 252, 0.45)",
+          gradient: "from-pink-400 via-fuchsia-300 to-amber-200",
+          tagline: "Kết hợp tư duy Khoa học dữ liệu với nghệ thuật thiết kế giao diện Frontend.",
+          bio: "Kết hợp tư duy phân tích của Khoa học dữ liệu với nghệ thuật xây dựng giao diện Frontend hiện đại. Tạo ra những ứng dụng web tương tác mượt mà, trực quan hóa dữ liệu thẩm mỹ và chuẩn UX/UI.",
+          skills: ["React / Next.js", "Tailwind / UI-UX", "Interactive Data Viz", "Data Science"],
+          projects: [
+            {
+              title: "Interactive Data Visualization & Web Experience",
+              summary: "Giao diện web hiện đại trình diễn dữ liệu trực quan với chuyển động mượt mà và thiết kế hướng người dùng.",
+              metrics: "Tối ưu trải nghiệm UX · Hiệu năng hiển thị 60FPS",
+              stack: ["React", "Tailwind CSS", "JavaScript", "UI/UX"]
+            },
+            {
+              title: "Personal Creative Portfolio & Design System",
+              summary: "Xây dựng hệ thống component chuẩn mực, thích ứng đa thiết bị từ mobile đến desktop.",
+              metrics: "Clean Architecture · Modern Glassmorphism",
+              stack: ["Frontend", "CSS Animation", "Figma", "Git"]
+            }
+          ]
+        },
+        {
+          index: 4,
+          chapterNum: "05",
+          name: "NGUYỄN LƯU QUỲNH NGHI",
+          role: "Khoa học dữ liệu & Visual Arts",
+          shortFocus: "Data Science & Visual Arts",
+          cohort: "Data & Arts · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA NGUYỄN LƯU QUỲNH NGHI VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/240a2e/e879f9?text=QUYNH+NGHI",
+          portfolioUrl: "https://ak98587.github.io/portfolio/",
+          sculptureName: "🦋 HỒ ĐIỆP & KHỔNG TƯỚC",
+          paletteLabel: "Neon Magenta, Coral & Electric Violet",
+          accent: "#e879f9",
+          bgOrb1: "rgba(232, 121, 249, 0.52)",
+          bgOrb2: "rgba(251, 113, 133, 0.42)",
+          gradient: "from-fuchsia-400 via-rose-400 to-violet-400",
+          tagline: "Giao thoa độc đáo giữa Khoa học dữ liệu (Data Science) và Nghệ thuật thị giác.",
+          bio: "Giao thoa độc đáo giữa Khoa học dữ liệu (Data Science) và Nghệ thuật thị giác (Visual Arts). Chuyển hóa các tập dữ liệu phức tạp thành tác phẩm thị giác sống động, sáng tạo số và kể chuyện bằng hình ảnh.",
+          skills: ["Visual Arts", "Creative Data Viz", "Data Science", "Digital Design"],
+          projects: [
+            {
+              title: "Aesthetic Data Storytelling & Visual Archive",
+              summary: "Dự án kết hợp phân tích dữ liệu văn hóa - nghệ thuật với ngôn ngữ đồ họa thị giác đương đại.",
+              metrics: "Giao thoa Nghệ thuật & Khoa học dữ liệu",
+              stack: ["Visual Arts", "Data Visualization", "Python", "Design"]
+            },
+            {
+              title: "Generative Pattern & Color Exploration",
+              summary: "Nghiên cứu bố cục thị giác, bảng màu cảm xúc và hình học phân bố từ dữ liệu thực nghiệm.",
+              metrics: "Sáng tạo thị giác · Trải nghiệm đa giác quan",
+              stack: ["Creative Coding", "Digital Art", "Analytics"]
+            }
+          ]
+        },
+        {
+          index: 5,
+          chapterNum: "06",
+          name: "NGUYỄN HOÀNG ANH",
+          role: "CNTT, K24, Web & NLP",
+          shortFocus: "Web Dev & NLP",
+          cohort: "K24 · Nhóm 5",
+          // 👇 DÁN LINK ẢNH AVATAR CỦA NGUYỄN HOÀNG ANH VÀO ĐÂY:
+          avatar: "https://placehold.co/240x240/261c06/fbbf24?text=HOANG+ANH",
+          portfolioUrl: "https://hoanhh4977.github.io/Portfolio/",
+          sculptureName: "🦊 CỬU VĨ LINH HỒ & NLP",
+          paletteLabel: "Cobalt Blue, Amber Gold & Electric Cyan",
+          accent: "#fbbf24",
+          bgOrb1: "rgba(251, 191, 36, 0.48)",
+          bgOrb2: "rgba(56, 189, 248, 0.48)",
+          gradient: "from-amber-400 via-orange-400 to-sky-400",
+          tagline: "Phát triển Full-Stack Web hiện đại tích hợp Xử lý ngôn ngữ tự nhiên (NLP).",
+          bio: "Sinh viên CNTT K24 chuyên sâu về Phát triển Web (Full-Stack Web) và Xử lý ngôn ngữ tự nhiên (Natural Language Processing - NLP). Xây dựng các nền tảng web thông minh tích hợp mô hình ngôn ngữ.",
+          skills: ["NLP / Transformers", "Full-Stack Web", "JavaScript / TS", "Python Backend"],
+          projects: [
+            {
+              title: "Intelligent Vietnamese NLP Web Platform",
+              summary: "Ứng dụng web tích hợp xử lý ngôn ngữ tự nhiên tiếng Việt: phân loại văn bản, trích xuất ngữ nghĩa và tìm kiếm thông minh.",
+              metrics: "Xử lý văn bản tốc độ cao · Giao diện Web hiện đại",
+              stack: ["NLP", "Python", "JavaScript", "Web Development"]
+            },
+            {
+              title: "Scalable Modern Web Application",
+              summary: "Kiến trúc ứng dụng web phản hồi nhanh, tối ưu hóa trải nghiệm người dùng và kết nối API thời gian thực.",
+              metrics: "Clean Code · Full-Stack Architecture",
+              stack: ["HTML/CSS/JS", "Backend API", "Git"]
+            }
+          ]
+        }
+      ]
+    };
+
+    const MEMBERS = PORTFOLIO_CONFIG.members;
+
+    // Load any custom avatars saved by the user in localStorage
+    try {
+      const savedAvatars = JSON.parse(localStorage.getItem('NHOM5_CUSTOM_AVATARS') || '{}');
+      MEMBERS.forEach((m, idx) => {
+        if (savedAvatars[idx]) m.avatar = savedAvatars[idx];
+      });
+    } catch (e) {}
+
+    /********************************************************************
+     * 1. CHAPTERS TIMELINE CONFIGURATION (0..7)
+     * Default Landing (Chapter 0 at 0% scroll) is IMMEDIATELY "PORTFOLIO / NHÓM 5"!
+     ********************************************************************/
+    const CHAPTERS = [
+      {
+        id: 0,
+        code: "01 · PORTFOLIO // NHÓM 5 COLLECTIVE",
+        shortLabel: "01·NHÓM 5",
+        beastName: "PORTFOLIO NHÓM 5",
+        scrollRange: [0.00, 0.14],
+        accentHex: "#38bdf8",
+        camPos: { x: 0, y: 2, z: 118 },
+        camLook: { x: 0, y: 2, z: 0 },
+        memberIndex: null
+      },
+      {
+        id: 1,
+        code: "02 · LONG THẦN // ĐẶNG HOÀNG ÂN",
+        shortLabel: "🐉 HOÀNG ÂN",
+        beastName: "LONG THẦN (EASTERN DRAGON)",
+        scrollRange: [0.14, 0.27],
+        accentHex: "#22d3ee",
+        camPos: { x: 14, y: 6, z: 112 },
+        camLook: { x: -8, y: 2, z: 0 },
+        memberIndex: 0
+      },
+      {
+        id: 2,
+        code: "03 · KỲ LÂN TINH VÂN // PHAN HẢI NAM",
+        shortLabel: "🦌 HẢI NAM",
+        beastName: "KỲ LÂN & NÃO DỮ LIỆU",
+        scrollRange: [0.27, 0.40],
+        accentHex: "#10b981",
+        camPos: { x: 16, y: 7, z: 110 },
+        camLook: { x: -8, y: 3, z: 0 },
+        memberIndex: 1
+      },
+      {
+        id: 3,
+        code: "04 · BẠCH HỔ CƠ KHÍ // LÊ NGUYỄN NHẬT ĐÌNH",
+        shortLabel: "🐯 NHẬT ĐÌNH",
+        beastName: "BẠCH HỔ & TURBINE",
+        scrollRange: [0.40, 0.53],
+        accentHex: "#f97316",
+        camPos: { x: 18, y: 8, z: 112 },
+        camLook: { x: -8, y: 2, z: 0 },
+        memberIndex: 2
+      },
+      {
+        id: 4,
+        code: "05 · PHƯỢNG HOÀNG LỬA // NGUYỄN NGỌC MINH THƯ",
+        shortLabel: "🦅 MINH THƯ",
+        beastName: "PHƯỢNG HOÀNG & HOA SEN",
+        scrollRange: [0.53, 0.66],
+        accentHex: "#f472b6",
+        camPos: { x: 16, y: 10, z: 112 },
+        camLook: { x: -8, y: 3, z: 0 },
+        memberIndex: 3
+      },
+      {
+        id: 5,
+        code: "06 · HỒ ĐIỆP & KHỔNG TƯỚC // NGUYỄN LƯU QUỲNH NGHI",
+        shortLabel: "🦋 QUỲNH NGHI",
+        beastName: "HỒ ĐIỆP VŨ TRỤ",
+        scrollRange: [0.66, 0.79],
+        accentHex: "#e879f9",
+        camPos: { x: 16, y: 7, z: 110 },
+        camLook: { x: -8, y: 3, z: 0 },
+        memberIndex: 4
+      },
+      {
+        id: 6,
+        code: "07 · CỬU VĨ LINH HỒ // NGUYỄN HOÀNG ANH",
+        shortLabel: "🦊 HOÀNG ANH",
+        beastName: "CỬU VĨ & SÓNG NLP",
+        scrollRange: [0.79, 0.91],
+        accentHex: "#fbbf24",
+        camPos: { x: 16, y: 8, z: 114 },
+        camLook: { x: -8, y: 2, z: 0 },
+        memberIndex: 5
+      },
+      {
+        id: 7,
+        code: "08 · ĐẠI HỘI TỤ LỤC LINH // NHÓM 5",
+        shortLabel: "✦ HỢP NHẤT",
+        beastName: "LỤC LINH HỘI TỤ",
+        scrollRange: [0.91, 1.00],
+        accentHex: "#c084fc",
+        camPos: { x: 0, y: 4, z: 124 },
+        camLook: { x: 0, y: 2, z: 0 },
+        memberIndex: null
+      }
+    ];
+
+    /********************************************************************
+     * 2. DETERMINISTIC PRNG & ULTRA-CRISP VIETNAMESE CANVAS TEXT SAMPLER
+     ********************************************************************/
+    const MAX_PARTICLES = PORTFOLIO_CONFIG.maxParticleCount; // 80,000 dots buffer
+    const TOTAL_STATES = 9; // States 0..7 + State 8 (Bonus Cá Chép Hóa Rồng)
+    let activeParticleCount = PORTFOLIO_CONFIG.defaultParticleCount; // 55,000 default
+    let isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let currentActiveMemberIndex = 0;
+    let currentChapterIndex = 0;
+    let manualBeastOverride = null; // null = follow scroll; 0..8 = locked summoned beast
+    let colorFXMode = 0; // 0 = Original, 1 = Cyber Neon, 2 = Hoàng Kim, 3 = Vũ Trụ Cầu Vồng
+    let mouseForceAttractor = false; // false = Repel Shockwave, true = Blackhole Vortex
+
+    function createPRNG(seed) {
+      let a = seed >>> 0;
+      return function() {
+        let t = (a += 0x6D2B79F5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
     }
 
-    var top = document.createElement("div");
-    top.className = "card-top";
-    var avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.style.background = m.color;
-    avatar.style.color = m.colorFg;
-    avatar.textContent = m.initials;
-    var meta = document.createElement("div");
-    var num = document.createElement("div");
-    num.className = "num";
-    num.textContent = "THÀNH VIÊN " + m.num;
-    var status = document.createElement("span");
-    status.className = "status " + (has ? "ready" : "pending");
-    status.textContent = has ? "● Có link portfolio" : "○ Sắp cập nhật";
-    meta.appendChild(num);
-    meta.appendChild(status);
-    top.appendChild(avatar);
-    top.appendChild(meta);
-
-    var name = document.createElement("h2");
-    name.className = "name";
-    name.textContent = m.name;
-
-    var foot = document.createElement("div");
-    foot.className = "card-foot";
-    var btn = document.createElement("span");
-    if(has){
-      btn.className = "btn btn-primary";
-      btn.textContent = "Xem portfolio ";
-      btn.appendChild(svgIcon());
-    } else {
-      btn.className = "btn btn-disabled";
-      btn.textContent = "Sắp cập nhật link";
+    function setColorRGB(arr, idx, r, g, b) {
+      arr[idx * 3]     = r;
+      arr[idx * 3 + 1] = g;
+      arr[idx * 3 + 2] = b;
     }
-    foot.appendChild(btn);
-    var host = document.createElement("span");
-    host.className = "host";
-    if(has){
-      host.textContent = hostOf(m.url);
-      host.title = m.url;
-    } else {
-      host.textContent = "—";
+
+    function lerpVal(a, b, t) {
+      return a + (b - a) * t;
     }
-    foot.appendChild(host);
 
-    card.appendChild(top);
-    card.appendChild(name);
-    card.appendChild(foot);
-    ring.appendChild(card);
-  });
-  cards = Array.prototype.slice.call(ring.querySelectorAll(".card"));
-}
+    // High-resolution Vietnamese Diacritics Text Sampler (2400x760 buffer)
+    function sampleTextToPoints(lines, count, options = {}) {
+      const width = options.canvasWidth || 2400;
+      const height = options.canvasHeight || 720;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
 
-/* ---- 3D orbit: cards revolving around each other ---- */
-var state = { rot: 0, vel: 0, dragging:false, hover:false, focusPause:false, lastInteract:0 };
-var radius = 340;
-var STEP = 360 / MEMBERS.length;
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
 
-function norm(a){ a = a % 360; if(a > 180) a -= 360; if(a < -180) a += 360; return a; }
-function cardAngle(i){ return i * STEP; }
+      lines.forEach((lineObj) => {
+        ctx.font = lineObj.font || '900 140px "Be Vietnam Pro", "Inter", sans-serif';
+        ctx.fillText(lineObj.text, width / 2, lineObj.y);
+      });
 
-function layout(){
-  var w = stage.clientWidth || 1080;
-  var cardW = cards.length ? cards[0].offsetWidth : 300;
-  radius = Math.max(Math.round(cardW * 0.8), Math.min(400, w/2 - cardW/2 - 8));
-}
+      const imgData = ctx.getImageData(0, 0, width, height).data;
+      const validPixels = [];
+      const step = options.pixelStep || 2;
 
-function paint(){
-  ring.style.transform = "rotateX(-8deg) rotateY(" + state.rot + "deg)";
-  hub.style.transform = "rotateY(" + (-state.rot) + "deg)";
-  hub.style.zIndex = "25";
-  for(var i=0;i<cards.length;i++){
-    var eff = norm(state.rot + cardAngle(i));
-    var c = Math.cos(eff * Math.PI/180);
-    var s = 1 + 0.07 * Math.max(0, c);
-    cards[i].style.transform = "rotateY(" + cardAngle(i) + "deg) translateZ(" + radius + "px) scale(" + s.toFixed(3) + ")";
-    cards[i].style.opacity = (0.30 + 0.70 * ((c + 1) / 2)).toFixed(2);
-    cards[i].style.zIndex = String(Math.round((c + 1) * 50));
-    cards[i].style.pointerEvents = c > 0.75 ? "auto" : "none";
-    cards[i].classList.toggle("is-front", Math.abs(eff) < 30);
-  }
-}
+      for (let y = 0; y < height; y += step) {
+        for (let x = 0; x < width; x += step) {
+          const alpha = imgData[(y * width + x) * 4];
+          if (alpha > 115) {
+            validPixels.push({
+              x: (x / width - 0.5) * (options.worldWidth || 134),
+              y: (0.5 - y / height) * (options.worldHeight || 42)
+            });
+          }
+        }
+      }
 
-function tweenRot(target){
-  state.vel = 0;
-  state.lastInteract = performance.now();
-  if(window.gsap && !reduceMotion){
-    gsap.to(state, { rot: target, duration:.7, ease:"power3.out", overwrite:true });
-  } else {
-    state.rot = target; paint();
-  }
-}
-function rotateCardToFront(i){
-  var delta = norm(-cardAngle(i) - state.rot);
-  tweenRot(state.rot + delta);
-}
-function stepBy(dir){
-  var base = Math.round(state.rot / STEP) * STEP;
-  tweenRot(base + dir * STEP);
-}
-document.getElementById("prevBtn").addEventListener("click", function(){ stepBy(1); });
-document.getElementById("nextBtn").addEventListener("click", function(){ stepBy(-1); });
+      const rand = createPRNG(options.seed || 1337);
+      const out = new Float32Array(count * 3);
+      const offsetX = options.offsetX || 0;
+      const offsetY = options.offsetY || 0;
+      const offsetZ = options.offsetZ || 0;
+      const jitterAmount = options.jitter !== undefined ? options.jitter : 0.14;
+      const depthSpread = options.depthSpread !== undefined ? options.depthSpread : 0.25;
 
-/* Drag to spin (with inertia); a real drag must not trigger the card link.
-   NOTE: pointer capture is only taken AFTER the pointer has really moved.
-   Capturing on pointerdown retargets the click to the stage, which cancels
-   the anchor's own click — that is why cards used to not open a new tab. */
-var dragId = null, startX = 0, lastX = 0, startRot = 0, moved = 0, lastT = 0, captured = false;
-stage.addEventListener("pointerdown", function(e){
-  if(e.target.closest("button")) return;
-  dragId = e.pointerId; startX = lastX = e.clientX; startRot = state.rot; moved = 0; captured = false;
-  state.vel = 0; state.dragging = true; lastT = performance.now();
-  if(window.gsap) gsap.killTweensOf(state);
-});
-stage.addEventListener("pointermove", function(e){
-  if(!state.dragging || e.pointerId !== dragId) return;
-  var dx = e.clientX - lastX; lastX = e.clientX;
-  moved = Math.max(moved, Math.abs(e.clientX - startX));
-  if(!captured && moved > 6){
-    captured = true;
-    try { stage.setPointerCapture(dragId); } catch(err){}
-  }
-  state.rot = startRot + (e.clientX - startX) * 0.4;
-  var now = performance.now(), dtt = Math.max(1, now - lastT); lastT = now;
-  state.vel = (dx * 0.4) / (dtt / 16.7);
-  paint();
-});
-function endDrag(e){
-  if(e.pointerId !== dragId) return;
-  state.dragging = false; dragId = null;
-  if(captured){ captured = false; try { stage.releasePointerCapture(e.pointerId); } catch(err){} }
-  state.lastInteract = performance.now();
-  if(moved < 6) state.vel = 0;
-}
-stage.addEventListener("pointerup", endDrag);
-stage.addEventListener("pointercancel", endDrag);
+      if (validPixels.length === 0) return out;
 
-/* Click: side card -> spin it to the front; front card -> open portfolio in a NEW tab.
-   "Front" uses the same threshold as pointer-events in paint() (cos > 0.75, ~41deg),
-   so any card the user can actually click also opens instead of just rotating. */
-stage.addEventListener("click", function(e){
-  if(moved > 6){ e.preventDefault(); e.stopPropagation(); moved = 0; return; }
-  var card = e.target.closest(".card");
-  if(!card) return;
-  var i = cards.indexOf(card);
-  if(i < 0) return;
-  var eff = norm(state.rot + cardAngle(i));
-  if(Math.cos(eff * Math.PI/180) <= 0.75){
-    e.preventDefault();
-    rotateCardToFront(i);
-    return;
-  }
-  if(card.tagName === "A"){
-    var url = card.getAttribute("href");
-    if(url){
-      /* Open exactly once, explicitly from the click gesture, and always
-         suppress the anchor default afterwards. */
-      e.preventDefault();
-      safeOpen(url);
+      // Uniformly stride across all valid pixels so every Vietnamese accent mark is densely populated
+      for (let i = 0; i < count; i++) {
+        const pIndex = Math.floor((i / count) * validPixels.length + rand() * 3) % validPixels.length;
+        const px = validPixels[pIndex];
+        const jitterX = (rand() - 0.5) * jitterAmount;
+        const jitterY = (rand() - 0.5) * jitterAmount;
+        const jitterZ = (rand() - 0.5) * depthSpread;
+
+        out[i * 3]     = px.x + offsetX + jitterX;
+        out[i * 3 + 1] = px.y + offsetY + jitterY;
+        out[i * 3 + 2] = offsetZ + jitterZ;
+      }
+      return out;
     }
-  }
-}, true);
 
-stage.addEventListener("mouseenter", function(){ state.hover = true; });
-stage.addEventListener("mouseleave", function(){ state.hover = false; });
-stage.addEventListener("focusin", function(e){
-  state.focusPause = true;
-  var card = e.target.closest(".card");
-  if(card){ var i = cards.indexOf(card); if(i >= 0) rotateCardToFront(i); }
-});
-stage.addEventListener("focusout", function(e){
-  if(!stage.contains(e.relatedTarget)) state.focusPause = false;
-});
+    /********************************************************************
+     * 3. BUILD ALL 9 MYTHICAL & TYPOGRAPHIC POINT-CLOUD SCULPTURES
+     ********************************************************************/
+    const statePositions = [];
+    const stateColors = [];
+    const stateIsText = [];
 
-/* Auto-rotate loop */
-var lastFrame = performance.now();
-function tick(now){
-  var dt = Math.min(50, now - lastFrame); lastFrame = now;
-  if(!state.dragging){
-    if(Math.abs(state.vel) > 0.002){
-      state.rot += state.vel * (dt / 16.7);
-      state.vel *= Math.pow(0.94, dt / 16.7);
-    } else if(!reduceMotion && !state.hover && !state.focusPause && !document.hidden && now - state.lastInteract > 1200){
-      state.rot -= 0.018 * (dt / 16.7);
+    function buildAllPointCloudStates(N) {
+      for (let s = 0; s < TOTAL_STATES; s++) {
+        statePositions[s] = new Float32Array(N * 3);
+        stateColors[s] = new Float32Array(N * 3);
+        stateIsText[s] = new Float32Array(N); // 1.0 = locked razor-sharp text dot, 0.0 = creature dot
+      }
+
+      // Dedicated high-contrast 3D Vietnamese Name Banner above every sculpture
+      function assignHeaderParticles(stateIdx, startIdx, count, headerText, subText, r, g, b) {
+        const posArr = statePositions[stateIdx];
+        const colArr = stateColors[stateIdx];
+        const txtArr = stateIsText[stateIdx];
+
+        const lines = [
+          { text: headerText, y: 260, font: '900 168px "Be Vietnam Pro", "Inter", sans-serif' }
+        ];
+        if (subText) {
+          lines.push({ text: subText, y: 495, font: '700 68px "JetBrains Mono", "Be Vietnam Pro", monospace' });
+        }
+        const pts = sampleTextToPoints(
+          lines,
+          count,
+          {
+            canvasWidth: 2600,
+            canvasHeight: 680,
+            pixelStep: 2,
+            worldWidth: 112,
+            worldHeight: 28,
+            offsetX: 14,
+            offsetY: 28,
+            offsetZ: 12,
+            jitter: 0.10,
+            depthSpread: 0.18
+          }
+        );
+        for (let i = 0; i < count; i++) {
+          const idx = startIdx + i;
+          const px = pts[i * 3];
+          const py = pts[i * 3 + 1];
+          const pz = pts[i * 3 + 2];
+          posArr[idx * 3]     = px;
+          posArr[idx * 3 + 1] = py;
+          posArr[idx * 3 + 2] = pz;
+          txtArr[idx] = 1.0; // Mark as crisp text particle!
+
+          // Top Vietnamese Name line: ultra-bright luminous white-hot core with subtle accent tint
+          if (py > 24.5) {
+            setColorRGB(colArr, idx, Math.min(1.0, r * 0.25 + 0.82), Math.min(1.0, g * 0.25 + 0.82), Math.min(1.0, b * 0.25 + 0.82));
+          } else {
+            setColorRGB(colArr, idx, Math.min(1.0, r * 0.7 + 0.3), Math.min(1.0, g * 0.7 + 0.3), Math.min(1.0, b * 0.7 + 0.3));
+          }
+        }
+      }
+
+      // ================================================================
+      // STATE 0 (DEFAULT LANDING): "PORTFOLIO / NHÓM 5" + SACRED MANDALA
+      // ================================================================
+      {
+        const rand = createPRNG(202);
+        const pos = statePositions[0];
+        const col = stateColors[0];
+        const txt = stateIsText[0];
+
+        const textCount = Math.floor(N * 0.78);
+
+        const textPts = sampleTextToPoints(
+          [
+            { text: PORTFOLIO_CONFIG.collectiveTitleLine1, y: 205, font: '900 195px "Be Vietnam Pro", "Space Grotesk", sans-serif' },
+            { text: PORTFOLIO_CONFIG.collectiveTitleLine2, y: 455, font: '900 185px "Be Vietnam Pro", "Space Grotesk", sans-serif' },
+            { text: PORTFOLIO_CONFIG.collectiveSubtitle, y: 635, font: '700 54px "JetBrains Mono", monospace' }
+          ],
+          textCount,
+          { canvasWidth: 2400, canvasHeight: 740, pixelStep: 2, worldWidth: 132, worldHeight: 44, jitter: 0.12, depthSpread: 0.22, seed: 202 }
+        );
+
+        for (let i = 0; i < textCount; i++) {
+          const px = textPts[i * 3];
+          const py = textPts[i * 3 + 1];
+          const pz = textPts[i * 3 + 2];
+          pos[i * 3]     = px;
+          pos[i * 3 + 1] = py + 2.0;
+          pos[i * 3 + 2] = pz + 6.0;
+          txt[i] = 1.0;
+
+          if (py > 4.0) {
+            setColorRGB(col, i, 0.98, 0.99, 1.0);
+          } else if (py > -12.5) {
+            const grad = (px + 65) / 130;
+            setColorRGB(col, i, lerpVal(0.22, 0.98, grad), lerpVal(0.95, 0.72, grad), 1.0);
+          } else {
+            setColorRGB(col, i, 0.55, 0.88, 1.0);
+          }
+        }
+
+        for (let i = textCount; i < N; i++) {
+          const angle = rand() * Math.PI * 2;
+          const ringChoice = i % 3;
+          const r = ringChoice === 0 ? 74 + (rand() - 0.5) * 2.5 : (ringChoice === 1 ? 58 + (rand() - 0.5) * 1.5 : 66 + Math.sin(angle * 12.0) * 4.0);
+          pos[i * 3]     = Math.cos(angle) * r * 1.15;
+          pos[i * 3 + 1] = Math.sin(angle) * r * 0.45 + 2.0;
+          pos[i * 3 + 2] = (rand() - 0.5) * 18.0 - 10.0;
+          txt[i] = 0.0;
+          setColorRGB(col, i, 0.22, 0.78, 1.0);
+        }
+      }
+
+      // ================================================================
+      // STATE 1: MEMBER 01 — LONG THẦN / EASTERN DRAGON (ĐẶNG HOÀNG ÂN)
+      // ================================================================
+      {
+        const rand = createPRNG(303);
+        const pos = statePositions[1];
+        const col = stateColors[1];
+        const headerCount = Math.floor(N * 0.34);
+        const bodyCount = N - headerCount;
+
+        function dragonSpine(s) {
+          const x = 16 + (0.42 - s) * 86 + Math.sin(s * Math.PI * 2.5) * 14.0;
+          const y = Math.sin(s * Math.PI * 3.2) * 13.5 + Math.cos(s * Math.PI * 1.5) * 4.5 - 8.5;
+          const z = Math.cos(s * Math.PI * 2.6) * 20.0;
+          return { x, y, z };
+        }
+
+        for (let i = 0; i < bodyCount; i++) {
+          const pType = i / bodyCount;
+          if (pType < 0.17) {
+            const hRand = rand();
+            const headOrigin = dragonSpine(0.0);
+            if (hRand < 0.46) {
+              const u = rand();
+              const theta = rand() * Math.PI * 2;
+              const jawSplit = (theta > Math.PI) ? -1.0 : 1.0;
+              const radius = (1.0 - u * 0.55) * 6.0 * (0.7 + 0.3 * Math.sin(u * Math.PI));
+              pos[i * 3]     = headOrigin.x - u * 14.0;
+              pos[i * 3 + 1] = headOrigin.y + Math.sin(theta) * radius * 0.78 + (jawSplit < 0 ? -u * 2.0 : u * 1.0);
+              pos[i * 3 + 2] = headOrigin.z + Math.cos(theta) * radius;
+              setColorRGB(col, i, 0.22, 0.96, 1.0);
+            } else if (hRand < 0.74) {
+              const side = (i % 2 === 0) ? 1 : -1;
+              const t = rand();
+              pos[i * 3]     = headOrigin.x + 2.0 + t * 15.0 + (rand() - 0.5) * 0.7;
+              pos[i * 3 + 1] = headOrigin.y + 3.4 + Math.pow(t, 1.2) * 13.5;
+              pos[i * 3 + 2] = headOrigin.z + side * (2.6 + t * 7.8);
+              setColorRGB(col, i, 0.95, 0.97, 1.0);
+            } else {
+              const side = (i % 2 === 0) ? 1 : -1;
+              const t = rand();
+              pos[i * 3]     = headOrigin.x - 11.0 + t * 25.0;
+              pos[i * 3 + 1] = headOrigin.y - 1.0 - Math.sin(t * Math.PI * 2.5) * 6.5 - t * 4.0;
+              pos[i * 3 + 2] = headOrigin.z + side * (3.2 + Math.sin(t * Math.PI * 2.0) * 9.5 + t * 5.0);
+              setColorRGB(col, i, 0.72, 0.48, 1.0);
+            }
+          } else if (pType < 0.72) {
+            const s = (pType - 0.17) / 0.55;
+            const center = dragonSpine(s);
+            const next = dragonSpine(s + 0.005);
+            const tx = next.x - center.x, ty = next.y - center.y, tz = next.z - center.z;
+            const tLen = Math.hypot(tx, ty, tz) || 1;
+            const nx = -ty / tLen, ny = tx / tLen;
+            const girth = 5.6 * Math.pow(1.0 - s * 0.82, 0.65) * (0.85 + 0.15 * Math.sin(s * 22.0));
+            const ringAngle = (i * 0.37) % (Math.PI * 2);
+            const shell = 0.8 + 0.2 * rand();
+
+            pos[i * 3]     = center.x + nx * Math.cos(ringAngle) * girth * shell;
+            pos[i * 3 + 1] = center.y + ny * Math.cos(ringAngle) * girth * shell;
+            pos[i * 3 + 2] = center.z + Math.sin(ringAngle) * girth * shell;
+
+            const scaleMix = 0.5 + 0.5 * Math.sin(s * 18.0 + ringAngle * 2.0);
+            setColorRGB(col, i, lerpVal(0.08, 0.68, scaleMix), lerpVal(0.90, 0.38, scaleMix), 1.0);
+          } else if (pType < 0.86) {
+            const s = rand();
+            const center = dragonSpine(s);
+            const finHeight = (s > 0.82) ? (4.5 + (s - 0.82) * 40.0) * rand() : (3.0 + Math.sin(s * 44.0) * 2.0) * rand();
+            pos[i * 3]     = center.x + (rand() - 0.5) * 2.2;
+            pos[i * 3 + 1] = center.y + 3.2 + finHeight;
+            pos[i * 3 + 2] = center.z + (s > 0.82 ? (rand() - 0.5) * 9.5 : (rand() - 0.5) * 1.4);
+            setColorRGB(col, i, 0.78, 0.62, 1.0);
+          } else {
+            if (i % 3 === 0) {
+              const u = Math.acos(1 - 2 * rand());
+              const v = rand() * Math.PI * 2;
+              const r = 4.8 * Math.cbrt(rand());
+              pos[i * 3]     = -24.0 + r * Math.sin(u) * Math.cos(v);
+              pos[i * 3 + 1] = -10.0 + r * Math.sin(u) * Math.sin(v);
+              pos[i * 3 + 2] = 14.0 + r * Math.cos(u);
+              setColorRGB(col, i, 1.0, 0.92, 0.45);
+            } else {
+              const legIdx = i % 4;
+              const legS = (legIdx < 2) ? 0.24 : 0.58;
+              const side = (legIdx % 2 === 0) ? 1 : -1;
+              const anchor = dragonSpine(legS);
+              const t = rand();
+              pos[i * 3]     = anchor.x + Math.sin(t * Math.PI) * 4.2 - t * 3.0;
+              pos[i * 3 + 1] = anchor.y - t * 13.5;
+              pos[i * 3 + 2] = anchor.z + side * (3.5 + t * 5.2);
+              setColorRGB(col, i, 0.85, 0.94, 1.0);
+            }
+          }
+        }
+        assignHeaderParticles(1, bodyCount, headerCount, "ĐẶNG HOÀNG ÂN", "01 · CNTT · KHOA HỌC DỮ LIỆU & AI · K24", 0.25, 0.95, 1.0);
+      }
+
+      // ================================================================
+      // STATE 2: MEMBER 02 — KỲ LÂN TINH VÂN & NÃO DỮ LIỆU (PHAN HẢI NAM)
+      // ================================================================
+      {
+        const rand = createPRNG(404);
+        const pos = statePositions[2];
+        const col = stateColors[2];
+        const headerCount = Math.floor(N * 0.34);
+        const bodyCount = N - headerCount;
+        const centerX = 16;
+
+        for (let i = 0; i < bodyCount; i++) {
+          const p = i / bodyCount;
+          if (p < 0.55) {
+            const part = rand();
+            if (part < 0.42) {
+              const s = rand();
+              const torsoX = (0.5 - s) * 28.0;
+              const torsoY = Math.sin(s * Math.PI * 1.4) * 3.5 - 6.0;
+              const girth = (5.8 - s * 1.2) * (0.85 + 0.15 * Math.cos(s * 10.0));
+              const ang = rand() * Math.PI * 2;
+              pos[i * 3]     = centerX + torsoX;
+              pos[i * 3 + 1] = torsoY + Math.sin(ang) * girth;
+              pos[i * 3 + 2] = Math.cos(ang) * girth * 0.82;
+              setColorRGB(col, i, 0.12, 0.95, 0.68);
+            } else if (part < 0.68) {
+              const u = rand();
+              const nx = -13.0 - u * 8.5 + (u > 0.7 ? (u - 0.7) * 14.0 : 0);
+              const ny = -4.0 + u * 17.5;
+              const rad = (1.0 - u * 0.65) * 4.2;
+              const ang = rand() * Math.PI * 2;
+              pos[i * 3]     = centerX + nx + Math.cos(ang) * rad * 0.6;
+              pos[i * 3 + 1] = ny + (rand() - 0.5) * 1.2;
+              pos[i * 3 + 2] = Math.sin(ang) * rad;
+              setColorRGB(col, i, 0.25, 0.98, 0.92);
+            } else if (part < 0.86) {
+              const leg = i % 4;
+              const front = leg < 2 ? -1 : 1;
+              const side = (leg % 2 === 0) ? 1 : -1;
+              const t = rand();
+              const lx = front * 11.5 + Math.sin(t * Math.PI) * (front * 3.2) - front * t * 3.5;
+              const ly = -8.5 - t * 14.5;
+              const lz = side * 3.8;
+              pos[i * 3]     = centerX + lx + (rand() - 0.5) * 1.3;
+              pos[i * 3 + 1] = ly;
+              pos[i * 3 + 2] = lz + (rand() - 0.5) * 1.3;
+              setColorRGB(col, i, 0.15, 0.78, 1.0);
+            } else {
+              const t = rand();
+              const side = (rand() - 0.5) * 2.0;
+              pos[i * 3]     = centerX + 14.0 + t * 18.0;
+              pos[i * 3 + 1] = -4.0 + Math.sin(t * 5.0) * 6.5 + t * 7.0;
+              pos[i * 3 + 2] = side * (2.0 + t * 7.5);
+              setColorRGB(col, i, 0.45, 1.0, 0.82);
+            }
+          } else {
+            const u = Math.acos(1 - 2 * rand());
+            const v = rand() * Math.PI * 2;
+            const r = 25.5 + Math.sin(u * 6.0) * Math.cos(v * 6.0) * 2.5;
+            pos[i * 3]     = centerX + r * Math.sin(u) * Math.cos(v) * 1.15;
+            pos[i * 3 + 1] = r * Math.sin(u) * Math.sin(v) * 0.82 - 5.5;
+            pos[i * 3 + 2] = r * Math.cos(u) * 0.9;
+            setColorRGB(col, i, 0.08, 0.62, 0.98);
+          }
+        }
+        assignHeaderParticles(2, bodyCount, headerCount, "PHAN HẢI NAM", "02 · KHOA HỌC DỮ LIỆU · ĐỊNH HƯỚNG DA / BA", 0.20, 0.98, 0.76);
+      }
+
+      // ================================================================
+      // STATE 3: MEMBER 03 — BẠCH HỔ CƠ KHÍ & HYPER-TURBINE (LÊ NGUYỄN NHẬT ĐÌNH)
+      // ================================================================
+      {
+        const rand = createPRNG(505);
+        const pos = statePositions[3];
+        const col = stateColors[3];
+        const headerCount = Math.floor(N * 0.34);
+        const bodyCount = N - headerCount;
+        const centerX = 16;
+
+        for (let i = 0; i < bodyCount; i++) {
+          const p = i / bodyCount;
+          if (p < 0.48) {
+            const tPart = rand();
+            if (tPart < 0.45) {
+              const u = Math.acos(1 - 2 * rand());
+              const v = rand() * Math.PI * 2;
+              const r = 9.5 * (0.82 + 0.18 * Math.cos(v * 4.0) * Math.sin(u * 3.0));
+              let tx = r * Math.sin(u) * Math.cos(v) * 1.15;
+              let ty = r * Math.sin(u) * Math.sin(v) * 1.05;
+              let tz = r * Math.cos(u) * 0.95 + 5.0;
+              if (rand() < 0.18) {
+                const side = (i % 2 === 0) ? 1 : -1;
+                tx = side * (6.5 + rand() * 2.5);
+                ty = 7.5 + rand() * 3.5;
+                tz = 4.0 + (rand() - 0.5) * 2.0;
+              }
+              pos[i * 3]     = centerX + tx;
+              pos[i * 3 + 1] = ty - 4.5;
+              pos[i * 3 + 2] = tz;
+              const stripe = Math.sin(ty * 1.3 + Math.abs(tx) * 0.6);
+              if (stripe > 0.45) setColorRGB(col, i, 1.0, 0.52, 0.12);
+              else setColorRGB(col, i, 0.92, 0.96, 1.0);
+            } else {
+              const side = (i % 2 === 0) ? 1 : -1;
+              const s = rand();
+              pos[i * 3]     = centerX + side * (7.0 + s * 11.0) + (rand() - 0.5) * 2.0;
+              pos[i * 3 + 1] = -7.0 - s * 11.0 + Math.sin(s * Math.PI) * 3.5;
+              pos[i * 3 + 2] = 6.0 + s * 8.0 + (rand() - 0.5) * 2.0;
+              setColorRGB(col, i, 0.22, 0.92, 1.0);
+            }
+          } else {
+            const ringId = i % 3;
+            const baseR = ringId === 0 ? 25.0 : (ringId === 1 ? 18.5 : 13.5);
+            const teeth = ringId === 0 ? 28 : 18;
+            const theta = rand() * Math.PI * 2;
+            const toothWave = Math.sign(Math.sin(theta * teeth)) * 1.6;
+            const r = baseR + toothWave + (rand() - 0.5) * 1.0;
+            const zDepth = (rand() - 0.5) * 4.5 - 3.0;
+
+            pos[i * 3]     = centerX + Math.cos(theta) * r;
+            pos[i * 3 + 1] = Math.sin(theta) * r - 4.5;
+            pos[i * 3 + 2] = zDepth;
+
+            if (ringId === 0) setColorRGB(col, i, 1.0, 0.52, 0.12);
+            else setColorRGB(col, i, 0.15, 0.88, 1.0);
+          }
+        }
+        assignHeaderParticles(3, bodyCount, headerCount, "LÊ NGUYỄN NHẬT ĐÌNH", "03 · SMART LOGISTICS · K24 · NHÓM 5", 1.0, 0.62, 0.20);
+      }
+
+      // ================================================================
+      // STATE 4: MEMBER 04 — PHƯỢNG HOÀNG LỬA BĂNG & SEN PHA LÊ (NGUYỄN NGỌC MINH THƯ)
+      // ================================================================
+      {
+        const rand = createPRNG(606);
+        const pos = statePositions[4];
+        const col = stateColors[4];
+        const headerCount = Math.floor(N * 0.34);
+        const bodyCount = N - headerCount;
+        const centerX = 16;
+
+        for (let i = 0; i < bodyCount; i++) {
+          const p = i / bodyCount;
+          if (p < 0.46) {
+            const side = (i % 2 === 0) ? 1 : -1;
+            const u = rand();
+            const featherId = (i % 9) / 9.0;
+            const spanX = side * (2.5 + u * 31.0);
+            const archY = Math.sin(u * Math.PI * 0.85) * 15.0 + u * 6.5 - featherId * (4.0 + u * 10.5) - 2.5;
+            const sweepZ = -Math.pow(u, 1.4) * 14.0 + featherId * 6.5 + (rand() - 0.5) * 1.2;
+
+            pos[i * 3]     = centerX + spanX;
+            pos[i * 3 + 1] = archY;
+            pos[i * 3 + 2] = sweepZ;
+
+            setColorRGB(
+              col,
+              i,
+              lerpVal(1.0, 0.98, u),
+              lerpVal(0.38, 0.84, u),
+              lerpVal(0.75, 0.42, featherId)
+            );
+          } else if (p < 0.72) {
+            const sub = rand();
+            if (sub < 0.35) {
+              const t = rand();
+              const r = (1.0 - t * 0.6) * 3.2;
+              const ang = rand() * Math.PI * 2;
+              pos[i * 3]     = centerX + Math.cos(ang) * r;
+              pos[i * 3 + 1] = -5.5 + t * 17.5;
+              pos[i * 3 + 2] = 4.0 + Math.sin(t * Math.PI) * 3.5 + Math.sin(ang) * r;
+              setColorRGB(col, i, 1.0, 0.88, 0.55);
+            } else {
+              const plume = (i % 5) - 2;
+              const s = rand();
+              pos[i * 3]     = centerX + plume * (2.2 + s * 6.5) + Math.sin(s * 8.0 + plume) * 2.5;
+              pos[i * 3 + 1] = -6.0 - s * 20.0;
+              pos[i * 3 + 2] = -2.0 - s * 14.0 + Math.cos(s * 6.0) * 3.5;
+              setColorRGB(col, i, 0.95, 0.48, 0.88);
+            }
+          } else {
+            const goldenAngle = 2.399963229728653;
+            const petalIdx = i % 20;
+            const layerT = petalIdx / 20;
+            const phi = petalIdx * goldenAngle;
+            const u = rand();
+            const rRadial = u * (7.0 + layerT * 13.0);
+            const localY = -17.0 + u * (4.0 + (1.0 - layerT) * 5.0);
+
+            pos[i * 3]     = centerX + Math.cos(phi) * rRadial;
+            pos[i * 3 + 1] = localY;
+            pos[i * 3 + 2] = Math.sin(phi) * rRadial;
+            setColorRGB(col, i, 0.92, 0.72, 1.0);
+          }
+        }
+        assignHeaderParticles(4, bodyCount, headerCount, "NGUYỄN NGỌC MINH THƯ", "04 · KHOA HỌC DỮ LIỆU · ĐỊNH HƯỚNG FRONTEND", 1.0, 0.64, 0.88);
+      }
+
+      // ================================================================
+      // STATE 5: MEMBER 05 — HỒ ĐIỆP VŨ TRỤ & KHỔNG TƯỚC LINH (NGUYỄN LƯU QUỲNH NGHI)
+      // ================================================================
+      {
+        const rand = createPRNG(707);
+        const pos = statePositions[5];
+        const col = stateColors[5];
+        const headerCount = Math.floor(N * 0.34);
+        const bodyCount = N - headerCount;
+        const centerX = 16;
+
+        for (let i = 0; i < bodyCount; i++) {
+          const p = i / bodyCount;
+          if (p < 0.68) {
+            const side = (i % 2 === 0) ? 1 : -1;
+            const t = (rand() - 0.5) * Math.PI;
+            const wingMaxR = 5.8 * (
+              Math.exp(Math.sin(t))
+              - 2.0 * Math.cos(4.0 * t)
+              + Math.pow(Math.sin((2.0 * t - Math.PI) / 24.0), 5.0)
+            );
+            const absMaxR = Math.max(2.5, Math.abs(wingMaxR));
+            const radialU = Math.pow(rand(), 0.58);
+            const r = radialU * absMaxR;
+
+            const wx = side * Math.cos(t) * r * 1.15;
+            const wy = Math.sin(t) * r * 1.02 - 5.5;
+            const wz = Math.abs(wx) * 0.34 + Math.sin(r * 0.45) * 2.4;
+
+            pos[i * 3]     = centerX + wx;
+            pos[i * 3 + 1] = wy;
+            pos[i * 3 + 2] = wz;
+
+            const veinPattern = Math.sin(t * 14.0) * Math.cos(r * 0.65);
+            if (radialU > 0.85 || veinPattern > 0.52) {
+              setColorRGB(col, i, 1.0, 0.45, 0.68);
+            } else {
+              setColorRGB(col, i, 0.78, 0.28, 1.0);
+            }
+          } else {
+            const fanIdx = i % 11;
+            const angle = ((fanIdx / 10) - 0.5) * Math.PI * 0.88 + Math.PI * 0.5;
+            const s = rand();
+            const r = 11.0 + s * 16.0;
+            const eyeCluster = s > 0.82;
+            const spread = eyeCluster ? (rand() - 0.5) * 2.8 : (rand() - 0.5) * 0.9;
+
+            pos[i * 3]     = centerX + Math.cos(angle) * r + spread;
+            pos[i * 3 + 1] = Math.sin(angle) * r - 11.0 + spread;
+            pos[i * 3 + 2] = -6.0 - s * 4.0;
+
+            if (eyeCluster) setColorRGB(col, i, 0.25, 0.95, 0.88);
+            else setColorRGB(col, i, 1.0, 0.62, 0.38);
+          }
+        }
+        assignHeaderParticles(5, bodyCount, headerCount, "NGUYỄN LƯU QUỲNH NGHI", "05 · KHOA HỌC DỮ LIỆU & VISUAL ARTS", 0.96, 0.52, 0.98);
+      }
+
+      // ================================================================
+      // STATE 6: MEMBER 06 — CỬU VĨ LINH HỒ & SÓNG NGÔN NGỮ NLP (NGUYỄN HOÀNG ANH)
+      // ================================================================
+      {
+        const rand = createPRNG(808);
+        const pos = statePositions[6];
+        const col = stateColors[6];
+        const headerCount = Math.floor(N * 0.34);
+        const glyphCount = Math.floor(N * 0.16);
+        const foxAndWaveCount = N - headerCount - glyphCount;
+        const centerX = 16;
+
+        const tokenPts = sampleTextToPoints(
+          [
+            { text: "<WEB_DEV />   TRANSFORMER   NLP_VIETNAM", y: 180, font: '700 84px "JetBrains Mono", monospace' },
+            { text: "TOKEN_STREAM · FULLSTACK · LLM_VECTOR", y: 480, font: '700 78px "Space Grotesk", sans-serif' }
+          ],
+          glyphCount,
+          { canvasWidth: 2200, canvasHeight: 640, worldWidth: 74, worldHeight: 24, seed: 808 }
+        );
+
+        for (let i = 0; i < glyphCount; i++) {
+          const gx = tokenPts[i * 3];
+          const gy = tokenPts[i * 3 + 1];
+          const waveZ = Math.sin(gx * 0.11 + gy * 0.08) * 11.0 - 4.0;
+          pos[i * 3]     = centerX + gx;
+          pos[i * 3 + 1] = gy - 7.5;
+          pos[i * 3 + 2] = waveZ;
+          setColorRGB(col, i, 1.0, 0.76, 0.18);
+        }
+
+        for (let i = 0; i < foxAndWaveCount; i++) {
+          const idx = glyphCount + i;
+          const p = i / foxAndWaveCount;
+          if (p < 0.65) {
+            const tailId = i % 9;
+            const tailAngle = ((tailId / 8) - 0.5) * Math.PI * 0.95 + Math.PI * 0.5;
+            const s = rand();
+            const len = s * 24.5;
+            const waveCurve = Math.sin(s * Math.PI * 2.2 + tailId * 0.7) * (3.5 * s);
+            const tailRadius = Math.sin(s * Math.PI) * 2.8 * (1.0 - s * 0.35);
+            const ringAng = rand() * Math.PI * 2;
+
+            const tx = Math.cos(tailAngle) * len + Math.cos(tailAngle + 1.57) * waveCurve + Math.cos(ringAng) * tailRadius;
+            const ty = Math.sin(tailAngle) * len - 13.0 + Math.sin(ringAng) * tailRadius;
+            const tz = Math.sin(s * Math.PI) * 8.0 + Math.sin(ringAng) * tailRadius + 4.0;
+
+            pos[idx * 3]     = centerX + tx;
+            pos[idx * 3 + 1] = ty;
+            pos[idx * 3 + 2] = tz;
+
+            setColorRGB(
+              col,
+              idx,
+              lerpVal(0.15, 1.0, s),
+              lerpVal(0.62, 0.78, s),
+              lerpVal(1.0, 0.25, s)
+            );
+          } else {
+            const u = (rand() - 0.5) * 78.0;
+            const ribbon = (i % 5) - 2;
+            pos[idx * 3]     = centerX + u;
+            pos[idx * 3 + 1] = -16.5 + Math.sin(u * 0.16 + ribbon) * 4.5 + ribbon * 2.0;
+            pos[idx * 3 + 2] = Math.cos(u * 0.14) * 9.0;
+            setColorRGB(col, idx, 0.22, 0.85, 1.0);
+          }
+        }
+        assignHeaderParticles(6, glyphCount + foxAndWaveCount, headerCount, "NGUYỄN HOÀNG ANH", "06 · CNTT · K24 · WEB & NLP", 1.0, 0.82, 0.28);
+      }
+
+      // ================================================================
+      // STATE 7: COLLECTIVE CONVERGENCE — ĐẠI HỘI TỤ NHÓM 5
+      // ================================================================
+      {
+        const rand = createPRNG(909);
+        const pos = statePositions[7];
+        const col = stateColors[7];
+        const txt = stateIsText[7];
+        const textCount = Math.floor(N * 0.36);
+        const sculptureCount = N - textCount;
+
+        const memberPalettes = [
+          [0.15, 0.92, 1.00],
+          [0.10, 0.95, 0.65],
+          [1.00, 0.55, 0.15],
+          [0.98, 0.52, 0.82],
+          [0.88, 0.35, 0.98],
+          [1.00, 0.78, 0.20]
+        ];
+
+        for (let i = 0; i < sculptureCount; i++) {
+          const strand = i % 6;
+          const u = rand() * Math.PI * 2;
+          const majorR = 34.0 + Math.cos(3.0 * u + strand) * 6.5;
+          const minorAngle = 3.0 * u + (strand * Math.PI * 2) / 6.0;
+          const minorR = 8.5 + (rand() - 0.5) * 2.2;
+
+          pos[i * 3]     = (majorR + minorR * Math.cos(minorAngle)) * Math.cos(u) * 1.15;
+          pos[i * 3 + 1] = (majorR + minorR * Math.cos(minorAngle)) * Math.sin(u) * 0.78;
+          pos[i * 3 + 2] = minorR * Math.sin(minorAngle) * 1.8 - 6.0;
+
+          const pal = memberPalettes[strand];
+          setColorRGB(col, i, pal[0], pal[1], pal[2]);
+        }
+
+        const centerPts = sampleTextToPoints(
+          [
+            { text: "NHÓM 5", y: 240, font: '900 190px "Be Vietnam Pro", "Space Grotesk", sans-serif' },
+            { text: "LỤC LINH HỘI TỤ · 6 PORTFOLIOS", y: 475, font: '700 72px "JetBrains Mono", "Be Vietnam Pro", monospace' }
+          ],
+          textCount,
+          { canvasWidth: 2400, canvasHeight: 680, pixelStep: 2, worldWidth: 74, worldHeight: 22, offsetX: 0, offsetY: 2, offsetZ: 8, jitter: 0.10, depthSpread: 0.20, seed: 909 }
+        );
+
+        for (let i = 0; i < textCount; i++) {
+          const idx = sculptureCount + i;
+          pos[idx * 3]     = centerPts[i * 3];
+          pos[idx * 3 + 1] = centerPts[i * 3 + 1];
+          pos[idx * 3 + 2] = centerPts[i * 3 + 2];
+          txt[idx] = 1.0;
+          setColorRGB(col, idx, 0.98, 0.99, 1.0);
+        }
+      }
+
+      // ================================================================
+      // STATE 8 (BONUS SUMMON): CÁ CHÉP HÓA RỒNG (KOI LEAPING WATERFALL GATE)
+      // ================================================================
+      {
+        const rand = createPRNG(1010);
+        const pos = statePositions[8];
+        const col = stateColors[8];
+        const headerCount = Math.floor(N * 0.30);
+        const bodyCount = N - headerCount;
+        const centerX = 12;
+
+        for (let i = 0; i < bodyCount; i++) {
+          const p = i / bodyCount;
+          if (p < 0.65) {
+            const koi = (i % 2 === 0) ? 1 : -1;
+            const s = rand();
+            const spiralAng = s * Math.PI * 1.6 + (koi > 0 ? 0 : Math.PI);
+            const radius = 14.0 + Math.sin(s * Math.PI) * 6.0;
+            const spineX = Math.cos(spiralAng) * radius;
+            const spineY = (0.5 - s) * 38.0 - 4.0;
+            const spineZ = Math.sin(spiralAng) * radius;
+
+            const bodyGirth = 4.8 * Math.sin(Math.pow(s, 0.7) * Math.PI) + (s > 0.78 ? (s - 0.78) * 18.0 : 0.6);
+            const ring = rand() * Math.PI * 2;
+
+            pos[i * 3]     = centerX + spineX + Math.cos(ring) * bodyGirth;
+            pos[i * 3 + 1] = spineY + (rand() - 0.5) * 1.5;
+            pos[i * 3 + 2] = spineZ + Math.sin(ring) * bodyGirth;
+
+            if (koi > 0) setColorRGB(col, i, 1.0, 0.68, 0.15);
+            else setColorRGB(col, i, 0.18, 0.92, 1.0);
+          } else {
+            const ang = rand() * Math.PI * 2;
+            const r = 10.0 + rand() * 32.0;
+            pos[i * 3]     = centerX + Math.cos(ang) * r;
+            pos[i * 3 + 1] = -24.0 + Math.sin(r * 0.5) * 2.5;
+            pos[i * 3 + 2] = Math.sin(ang) * r;
+            setColorRGB(col, i, 0.35, 0.78, 1.0);
+          }
+        }
+        assignHeaderParticles(8, bodyCount, headerCount, "CÁ CHÉP HÓA RỒNG", "NHÓM 5 · VƯỢT VŨ MÔN · THĂNG HOA", 1.0, 0.84, 0.28);
+      }
     }
-  }
-  paint();
-  requestAnimationFrame(tick);
-}
 
-render();
-state.lastInteract = performance.now();
-layout();
-paint();
-window.addEventListener("resize", function(){ layout(); paint(); });
-requestAnimationFrame(tick);
+    /********************************************************************
+     * 4. THREE.JS + CUSTOM GLSL SHADER PARTICLE ENGINE
+     ********************************************************************/
+    let scene, camera, renderer, particleSystem, particleGeometry, particleMaterial;
+    let ambientStarSystem, cyberFloorGrid, sacredRingsGroup;
+    let nameGlowBoost = 1.45; // High-clarity Vietnamese text dot boost by default
+    let currentStatePair = { a: 0, b: 1 };
 
-/* ---- Entrance animation ---- */
-if(window.gsap && !reduceMotion){
-  gsap.from("#pageHead", {y:16, opacity:0, duration:.6, ease:"power3.out"});
-  gsap.from(state, {rot:-160, duration:1.5, ease:"power3.out"});
-  gsap.from("#orbitControls", {y:12, opacity:0, duration:.55, delay:.35, ease:"power3.out", clearProps:"opacity"});
-}
+    const VERTEX_SHADER = `
+      uniform float uTime;
+      uniform float uMorph;
+      uniform float uScrollVelocity;
+      uniform float uBurst;
+      uniform float uReducedMotion;
+      uniform float uPixelRatio;
+      uniform float uStateA;
+      uniform float uStateB;
+      uniform vec3 uMouseWorld;
+      uniform float uMouseActive;
+      uniform float uMouseAttractor;
+      uniform float uColorFXMode;
+      uniform float uNameGlowBoost;
 
-/* ---- Three.js background: particles + floating wireframes ---- */
-(function(){
-  if(!window.THREE || reduceMotion) return;
-  var canvas = document.getElementById("bg3d");
-  var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  var renderer;
-  try { renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true}); } catch(e){ return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(55, 1, .1, 100);
-  camera.position.z = 9;
+      attribute vec3 aPosB;
+      attribute vec3 aColorA;
+      attribute vec3 aColorB;
+      attribute float aIsTextA;
+      attribute float aIsTextB;
+      attribute float aSize;
+      attribute float aSeed;
 
-  var ink = dark ? 0xe4e4e7 : 0x27272a;
-  var accent = dark ? 0xa1a1aa : 0x52525b;
+      varying vec3 vColor;
+      varying float vAlpha;
+      varying float vIsText;
 
-  // Particle field
-  var N = 420, pos = new Float32Array(N*3);
-  for(var i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*22; pos[i*3+1]=(Math.random()-.5)*13; pos[i*3+2]=(Math.random()-.5)*7; }
-  var pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute("position", new THREE.BufferAttribute(pos,3));
-  var points = new THREE.Points(pGeo, new THREE.PointsMaterial({color:accent, size:.045, transparent:true, opacity: dark?.65:.5}));
-  scene.add(points);
+      vec3 curlField(vec3 p, float t) {
+        float x = sin(p.y * 0.065 + t) + cos(p.z * 0.055 - t * 0.8);
+        float y = sin(p.z * 0.065 + t * 0.9) + cos(p.x * 0.055 + t);
+        float z = sin(p.x * 0.065 - t * 0.7) + cos(p.y * 0.055 + t * 1.1);
+        return vec3(x, y, z);
+      }
 
-  // Floating wireframe shapes
-  var shapes = [];
-  function addShape(geo, x, y, z, s, op){
-    var m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:ink, wireframe:true, transparent:true, opacity:op}));
-    m.position.set(x,y,z); m.scale.setScalar(s); scene.add(m); shapes.push(m); return m;
-  }
-  addShape(new THREE.IcosahedronGeometry(1,0), -5.6, 1.7, -1, 1.15, dark?.20:.13);
-  addShape(new THREE.TorusGeometry(.85,.28,10,28), 5.9, 2.0, -1.5, 1, dark?.18:.11);
-  addShape(new THREE.OctahedronGeometry(1,0), 4.7, -2.4, -.5, .8, dark?.20:.12);
-  addShape(new THREE.BoxGeometry(1.2,1.2,1.2), -4.9, -2.6, -1.2, .9, dark?.16:.10);
+      vec3 applyStateKinetics(vec3 p, float stateId, float isTextFlag, float t, float seed, float motionScale) {
+        // Keep Vietnamese Typography particles razor-sharp & stationary!
+        if (motionScale < 0.01 || isTextFlag > 0.5) return p;
+        vec3 outP = p;
 
-  var mx=0, my=0;
-  window.addEventListener("pointermove", function(e){
-    mx = (e.clientX / window.innerWidth - .5);
-    my = (e.clientY / window.innerHeight - .5);
-  }, {passive:true});
+        // State 1: Long Thần (Dragon) sinuous breathing
+        if (abs(stateId - 1.0) < 0.1) {
+          float wave = sin(p.x * 0.075 - t * 2.3) * 2.5;
+          outP.y += wave * motionScale;
+          outP.z += cos(p.x * 0.065 - t * 1.9) * 1.9 * motionScale;
+        }
+        // State 2: Kỳ Lân & Neural Cortex pulse
+        else if (abs(stateId - 2.0) < 0.1) {
+          float pulse = sin(length(p - vec3(16.0, -4.0, 0.0)) * 0.22 - t * 2.8);
+          outP += normalize(p - vec3(16.0, -4.0, 0.0) + 0.001) * pulse * 0.75 * motionScale;
+        }
+        // State 3: Bạch Hổ & Logistics Turbine rotation
+        else if (abs(stateId - 3.0) < 0.1) {
+          vec2 rel = p.xy - vec2(16.0, -4.5);
+          float r = length(rel);
+          if (r > 12.0 && r < 28.0) {
+            float dir = (r > 16.5 && r < 21.5) ? -1.0 : 1.0;
+            float ang = t * 0.48 * dir * motionScale;
+            float cs = cos(ang), sn = sin(ang);
+            outP.x = 16.0 + rel.x * cs - rel.y * sn;
+            outP.y = -4.5 + rel.x * sn + rel.y * cs;
+          }
+        }
+        // State 4: Phượng Hoàng Lửa (Phoenix) majestic wing flap
+        else if (abs(stateId - 4.0) < 0.1) {
+          float dx = p.x - 16.0;
+          if (abs(dx) > 3.0 && p.y > -12.0) {
+            float wingBeat = sin(t * 2.6 - abs(dx) * 0.06) * (abs(dx) * 0.16) * motionScale;
+            outP.y += wingBeat;
+            outP.z += cos(t * 2.6) * (abs(dx) * 0.06) * motionScale;
+          }
+        }
+        // State 5: Hồ Điệp & Khổng Tước articulated wing flap
+        else if (abs(stateId - 5.0) < 0.1) {
+          float dx = p.x - 16.0;
+          if (abs(dx) > 1.8 && p.z > -3.0) {
+            float flap = sin(t * 3.4) * 0.36 * motionScale;
+            float sgn = sign(dx);
+            float cs = cos(flap * sgn), sn = sin(flap * sgn);
+            outP.x = 16.0 + (dx * cs - p.z * sn);
+            outP.z = dx * sn + p.z * cs;
+          }
+        }
+        // State 6: Cửu Vĩ Linh Hồ & Sóng Ngôn Ngữ NLP
+        else if (abs(stateId - 6.0) < 0.1) {
+          outP.z += sin((p.x - 16.0) * 0.12 - t * 2.5 + p.y * 0.1) * 2.3 * motionScale;
+        }
+        // State 7 & 8: Orbital vortex spin
+        else if (abs(stateId - 7.0) < 0.1 || abs(stateId - 8.0) < 0.1) {
+          float r = length(p.xy);
+          if (r > 22.0) {
+            float ang = t * 0.25 * motionScale;
+            float cs = cos(ang), sn = sin(ang);
+            outP.x = p.x * cs - p.y * sn;
+            outP.y = p.x * sn + p.y * cs;
+          }
+        }
 
-  function resize(){
-    var w = window.innerWidth, h = window.innerHeight;
-    renderer.setSize(w,h,false);
-    camera.aspect = w/h; camera.updateProjectionMatrix();
-  }
-  window.addEventListener("resize", resize); resize();
+        return outP;
+      }
 
-  var clock = new THREE.Clock();
-  var running = true;
-  document.addEventListener("visibilitychange", function(){ running = !document.hidden; if(running) clock.getDelta(); });
-  (function loop(){
-    requestAnimationFrame(loop);
-    if(!running) return;
-    var t = clock.getElapsedTime();
-    points.rotation.y = t * .018;
-    shapes.forEach(function(s, idx){
-      s.rotation.x = t * (.12 + idx*.03);
-      s.rotation.y = t * (.16 + idx*.025);
-      s.position.y += Math.sin(t*.7 + idx*1.7) * .0016;
-    });
-    camera.position.x += ((mx*1.1) - camera.position.x) * .04;
-    camera.position.y += ((-my*.7) - camera.position.y) * .04;
-    camera.lookAt(0,0,0);
-    renderer.render(scene, camera);
-  })();
-})();
-</script>
+      vec3 cosinePalette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
+        return a + b * cos(6.28318 * (c * t + d));
+      }
+
+      void main() {
+        float motionScale = 1.0 - uReducedMotion * 0.85;
+
+        float stagger = aSeed * 0.22;
+        float tMorph = clamp((uMorph - stagger) / (1.0 - 0.22), 0.0, 1.0);
+        float smoothT = tMorph * tMorph * (3.0 - 2.0 * tMorph);
+
+        float isText = mix(aIsTextA, aIsTextB, smoothT);
+        vIsText = isText;
+
+        vec3 posA = applyStateKinetics(position, uStateA, aIsTextA, uTime, aSeed, motionScale);
+        vec3 posB = applyStateKinetics(aPosB, uStateB, aIsTextB, uTime, aSeed, motionScale);
+
+        vec3 p = mix(posA, posB, smoothT);
+
+        // Mid-transition spiral vortex & curl dispersion
+        float transEnvelope = sin(smoothT * 3.14159265);
+        if (transEnvelope > 0.001) {
+          float swirlAngle = transEnvelope * (1.65 + aSeed * 1.4) * motionScale;
+          float cs = cos(swirlAngle), sn = sin(swirlAngle);
+          vec2 centeredXZ = p.xz - vec2(8.0, 0.0);
+          p.xz = vec2(8.0, 0.0) + vec2(
+            centeredXZ.x * cs - centeredXZ.y * sn,
+            centeredXZ.x * sn + centeredXZ.y * cs
+          );
+          vec3 noiseVec = curlField(p * 0.45, uTime * 0.95 + aSeed * 6.28);
+          p += noiseVec * transEnvelope * (11.5 * motionScale);
+        }
+
+        // Lock text particles against ambient drift so Vietnamese diacritics stay ultra-sharp!
+        float ambientNoiseScale = mix(0.36, 0.012, isText);
+        p += curlField(p * 0.3, uTime * 0.55 + aSeed * 10.0) * (ambientNoiseScale * motionScale);
+
+        // Scroll velocity kinetic stretch (damped for text particles so names stay legible while scrolling)
+        float velMag = clamp(abs(uScrollVelocity), 0.0, 1.5) * mix(1.0, 0.18, isText);
+        p += curlField(p * 0.25, uTime * 2.0) * (velMag * 6.5 * motionScale);
+
+        // Supernova burst
+        if (uBurst > 0.001) {
+          vec3 dir = normalize(p - vec3(8.0, 0.0, 0.0) + vec3(0.001));
+          p += (dir * (30.0 + aSeed * 35.0) + curlField(p, uTime) * 14.0) * uBurst;
+        }
+
+        // 3D Mouse Raycast Repulsion OR Blackhole Vortex Attractor
+        if (uMouseActive > 0.01) {
+          vec3 toParticle = p - uMouseWorld;
+          float dist = length(toParticle);
+          float influenceRadius = 24.0;
+          if (dist < influenceRadius) {
+            float force = pow(1.0 - dist / influenceRadius, 1.8) * uMouseActive * mix(1.0, 0.35, isText);
+            vec3 radialDir = normalize(toParticle + vec3(0.0001));
+            vec3 swirlDir = cross(radialDir, vec3(0.0, 0.0, 1.0));
+            if (uMouseAttractor > 0.5) {
+              p += (-radialDir * 9.5 + swirlDir * 14.0) * force * motionScale;
+            } else {
+              p += (radialDir * 11.5 + swirlDir * 6.5) * force * motionScale;
+            }
+          }
+        }
+
+        vec3 baseCol = mix(aColorA, aColorB, smoothT);
+
+        if (abs(uColorFXMode - 1.0) < 0.1) {
+          baseCol = cosinePalette(
+            aSeed + uTime * 0.18 + p.x * 0.01,
+            vec3(0.5, 0.5, 0.5),
+            vec3(0.5, 0.5, 0.5),
+            vec3(1.0, 1.0, 1.0),
+            vec3(0.00, 0.33, 0.67)
+          );
+        } else if (abs(uColorFXMode - 2.0) < 0.1) {
+          float lum = dot(baseCol, vec3(0.3, 0.59, 0.11));
+          baseCol = mix(vec3(1.0, 0.76, 0.18), vec3(0.15, 0.98, 0.78), sin(aSeed * 6.28 + uTime) * 0.5 + 0.5) * (0.7 + lum * 0.6);
+        } else if (abs(uColorFXMode - 3.0) < 0.1) {
+          baseCol = cosinePalette(
+            length(p) * 0.02 - uTime * 0.25,
+            vec3(0.55, 0.5, 0.55),
+            vec3(0.45, 0.5, 0.45),
+            vec3(1.0, 0.8, 1.0),
+            vec3(0.1, 0.4, 0.8)
+          );
+        }
+
+        vColor = baseCol + vec3(0.2, 0.25, 0.32) * (transEnvelope * 0.45 + uBurst * 0.65);
+
+        // Make Vietnamese Text Particles extra luminous & crisp
+        if (isText > 0.05) {
+          vColor = mix(vColor, vColor * 1.3 + vec3(0.28, 0.32, 0.38), isText * clamp(uNameGlowBoost - 0.4, 0.0, 1.5));
+        }
+
+        vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
+        gl_Position = projectionMatrix * mvPosition;
+
+        float sparkle = mix(1.0 + 0.32 * sin(uTime * 4.5 + aSeed * 60.0), 1.08, isText);
+        float textSizeMult = mix(1.0, uNameGlowBoost * 1.12, isText);
+        float basePointSize = aSize * textSizeMult * sparkle * (1.0 + transEnvelope * 0.25 + uBurst * 0.55);
+        gl_PointSize = clamp(basePointSize * uPixelRatio * (198.0 / max(10.0, -mvPosition.z)), 1.3, 18.0);
+
+        float depthFade = smoothstep(265.0, 45.0, -mvPosition.z);
+        vAlpha = clamp(depthFade * mix(0.84 + 0.16 * sin(uTime * 2.5 + aSeed * 25.0), 0.98, isText), 0.2, 1.0);
+      }
+    `;
+
+    const FRAGMENT_SHADER = `
+      varying vec3 vColor;
+      varying float vAlpha;
+      varying float vIsText;
+
+      void main() {
+        vec2 uv = gl_PointCoord - vec2(0.5);
+        float dist = length(uv);
+        if (dist > 0.5) discard;
+
+        float core = smoothstep(0.5, mix(0.06, 0.16, vIsText), dist);
+        float glow = exp(-dist * mix(5.0, 3.8, vIsText));
+        vec3 finalColor = vColor + vec3(mix(0.32, 0.52, vIsText)) * pow(core, 2.4);
+
+        gl_FragColor = vec4(finalColor, (core * 0.92 + glow * 0.42) * vAlpha);
+      }
+    `;
+
+    function initWebGLScene() {
+      const container = document.getElementById('webgl-container');
+      try {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 1, 700);
+        camera.position.set(0, 2, 118);
+
+        renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          powerPreference: 'high-performance',
+          alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+      } catch (err) {
+        showWebGLFallback();
+        return false;
+      }
+
+      build3DBackgroundEnvironment();
+      buildAllPointCloudStates(MAX_PARTICLES);
+
+      particleGeometry = new THREE.BufferGeometry();
+
+      const rand = createPRNG(999);
+      const aSeed = new Float32Array(MAX_PARTICLES);
+      const aSize = new Float32Array(MAX_PARTICLES);
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        aSeed[i] = rand();
+        aSize[i] = 1.35 + Math.pow(rand(), 2.2) * 1.95;
+      }
+
+      const attrPosA = new THREE.BufferAttribute(new Float32Array(statePositions[0]), 3);
+      const attrPosB = new THREE.BufferAttribute(new Float32Array(statePositions[1]), 3);
+      const attrColA = new THREE.BufferAttribute(new Float32Array(stateColors[0]), 3);
+      const attrColB = new THREE.BufferAttribute(new Float32Array(stateColors[1]), 3);
+      const attrTxtA = new THREE.BufferAttribute(new Float32Array(stateIsText[0]), 1);
+      const attrTxtB = new THREE.BufferAttribute(new Float32Array(stateIsText[1]), 1);
+
+      particleGeometry.setAttribute('position', attrPosA);
+      particleGeometry.setAttribute('aPosB', attrPosB);
+      particleGeometry.setAttribute('aColorA', attrColA);
+      particleGeometry.setAttribute('aColorB', attrColB);
+      particleGeometry.setAttribute('aIsTextA', attrTxtA);
+      particleGeometry.setAttribute('aIsTextB', attrTxtB);
+      particleGeometry.setAttribute('aSeed', new THREE.BufferAttribute(aSeed, 1));
+      particleGeometry.setAttribute('aSize', new THREE.BufferAttribute(aSize, 1));
+
+      activeParticleCount = PORTFOLIO_CONFIG.defaultParticleCount; // Mặc định 80,000 hạt trên mọi thiết bị
+      particleGeometry.setDrawRange(0, activeParticleCount);
+      updateQualityButtonsUI(activeParticleCount);
+
+      particleMaterial = new THREE.ShaderMaterial({
+        vertexShader: VERTEX_SHADER,
+        fragmentShader: FRAGMENT_SHADER,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uTime: { value: 0 },
+          uMorph: { value: 0 },
+          uScrollVelocity: { value: 0 },
+          uBurst: { value: 0 },
+          uReducedMotion: { value: isReducedMotion ? 1.0 : 0.0 },
+          uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+          uStateA: { value: 0.0 },
+          uStateB: { value: 1.0 },
+          uMouseWorld: { value: new THREE.Vector3(0, 0, 0) },
+          uMouseActive: { value: 0.0 },
+          uMouseAttractor: { value: 0.0 },
+          uColorFXMode: { value: 0.0 },
+          uNameGlowBoost: { value: nameGlowBoost }
+        }
+      });
+
+      particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+      scene.add(particleSystem);
+
+      return true;
+    }
+
+    // Builds 3D background atmosphere so the scene has deep spatial perspective
+    function build3DBackgroundEnvironment() {
+      // 1. Perspective Cybernetic Floor & Ceiling Grids
+      cyberFloorGrid = new THREE.Group();
+      const gridFloor = new THREE.GridHelper(360, 36, 0x22d3ee, 0x1e293b);
+      gridFloor.position.set(0, -44, -30);
+      gridFloor.material.transparent = true;
+      gridFloor.material.opacity = 0.22;
+      cyberFloorGrid.add(gridFloor);
+
+      const gridCeiling = new THREE.GridHelper(360, 36, 0x818cf8, 0x1e293b);
+      gridCeiling.position.set(0, 52, -45);
+      gridCeiling.material.transparent = true;
+      gridCeiling.material.opacity = 0.12;
+      cyberFloorGrid.add(gridCeiling);
+      scene.add(cyberFloorGrid);
+
+      // 2. 3D Sacred Astrolabe Orbital Rings behind the sculptures
+      sacredRingsGroup = new THREE.Group();
+      sacredRingsGroup.position.set(14, 2, -28);
+
+      const ringGeo1 = new THREE.RingGeometry(38, 38.35, 96);
+      const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.18 });
+      const ringMesh1 = new THREE.Mesh(ringGeo1, ringMat1);
+      sacredRingsGroup.add(ringMesh1);
+
+      const ringGeo2 = new THREE.RingGeometry(48, 48.25, 96);
+      const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc, side: THREE.DoubleSide, transparent: true, opacity: 0.12 });
+      const ringMesh2 = new THREE.Mesh(ringGeo2, ringMat2);
+      ringMesh2.rotation.x = 0.35;
+      ringMesh2.rotation.y = -0.25;
+      sacredRingsGroup.add(ringMesh2);
+
+      scene.add(sacredRingsGroup);
+
+      // 3. Distant Floating Bokeh Nebula Dust (1,800 soft ambient stars)
+      const starCount = 1800;
+      const starGeo = new THREE.BufferGeometry();
+      const starPos = new Float32Array(starCount * 3);
+      const starCol = new Float32Array(starCount * 3);
+      const rand = createPRNG(7777);
+      for (let i = 0; i < starCount; i++) {
+        starPos[i * 3]     = (rand() - 0.5) * 380;
+        starPos[i * 3 + 1] = (rand() - 0.5) * 220;
+        starPos[i * 3 + 2] = -35 - rand() * 180;
+        const c = rand();
+        if (c < 0.5) setColorRGB(starCol, i, 0.25, 0.78, 1.0);
+        else setColorRGB(starCol, i, 0.75, 0.45, 1.0);
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+      const starMat = new THREE.PointsMaterial({
+        size: 1.6,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.42,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      ambientStarSystem = new THREE.Points(starGeo, starMat);
+      scene.add(ambientStarSystem);
+    }
+
+    function setActiveStatePair(indexA, indexB) {
+      if (currentStatePair.a === indexA && currentStatePair.b === indexB) return;
+      currentStatePair.a = indexA;
+      currentStatePair.b = indexB;
+
+      const posAttrA = particleGeometry.getAttribute('position');
+      const posAttrB = particleGeometry.getAttribute('aPosB');
+      const colAttrA = particleGeometry.getAttribute('aColorA');
+      const colAttrB = particleGeometry.getAttribute('aColorB');
+      const txtAttrA = particleGeometry.getAttribute('aIsTextA');
+      const txtAttrB = particleGeometry.getAttribute('aIsTextB');
+
+      posAttrA.array.set(statePositions[indexA]);
+      posAttrB.array.set(statePositions[indexB]);
+      colAttrA.array.set(stateColors[indexA]);
+      colAttrB.array.set(stateColors[indexB]);
+      txtAttrA.array.set(stateIsText[indexA]);
+      txtAttrB.array.set(stateIsText[indexB]);
+
+      posAttrA.needsUpdate = true;
+      posAttrB.needsUpdate = true;
+      colAttrA.needsUpdate = true;
+      colAttrB.needsUpdate = true;
+      txtAttrA.needsUpdate = true;
+      txtAttrB.needsUpdate = true;
+
+      particleMaterial.uniforms.uStateA.value = indexA;
+      particleMaterial.uniforms.uStateB.value = indexB;
+    }
+
+    /********************************************************************
+     * 5. SCROLL STORYTELLING & SUMMONED BEAST CONTROLLERS
+     ********************************************************************/
+    let globalScrollProgress = 0;
+    let smoothedScrollVelocity = 0;
+    let targetCamPos = new THREE.Vector3(0, 2, 118);
+    let targetCamLook = new THREE.Vector3(0, 2, 0);
+    let currentCamLook = new THREE.Vector3(0, 2, 0);
+
+    let isDraggingCanvas = false;
+    let dragStart = { x: 0, y: 0 };
+    let userOrbit = { yaw: 0, pitch: 0, targetYaw: 0, targetPitch: 0 };
+
+    const raycaster = new THREE.Raycaster();
+    const mouseNDC = new THREE.Vector2(999, 999);
+    const interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const intersectPoint = new THREE.Vector3();
+    let mouseActivityTarget = 0.0;
+
+    // 8 main timeline anchors (0 = PORTFOLIO NHÓM 5, 1..6 = 6 Members, 7 = Finale Convergence)
+    const STATE_ANCHORS = [0.00, 0.16, 0.30, 0.44, 0.58, 0.72, 0.85, 0.96];
+
+    function evaluateScrollTimeline(progress) {
+      globalScrollProgress = Math.max(0, Math.min(1, progress));
+
+      if (manualBeastOverride !== null) return;
+
+      let segIndex = 0;
+      for (let i = 0; i < STATE_ANCHORS.length - 1; i++) {
+        if (globalScrollProgress >= STATE_ANCHORS[i] && globalScrollProgress <= STATE_ANCHORS[i + 1]) {
+          segIndex = i;
+          break;
+        }
+        if (globalScrollProgress > STATE_ANCHORS[STATE_ANCHORS.length - 1]) {
+          segIndex = STATE_ANCHORS.length - 2;
+        }
+      }
+
+      const startP = STATE_ANCHORS[segIndex];
+      const endP = STATE_ANCHORS[segIndex + 1];
+      const rawLocal = (globalScrollProgress - startP) / Math.max(0.0001, endP - startP);
+      const clampedLocal = Math.max(0, Math.min(1, rawLocal));
+
+      // Long plateau hold so each Member Name & Mythical Creature stays rock-solid while reading
+      let plateauMorph = clampedLocal;
+      if (clampedLocal < 0.22) plateauMorph = 0.0;
+      else if (clampedLocal > 0.78) plateauMorph = 1.0;
+      else plateauMorph = (clampedLocal - 0.22) / 0.56;
+
+      setActiveStatePair(segIndex, segIndex + 1);
+      if (particleMaterial) {
+        particleMaterial.uniforms.uMorph.value = plateauMorph;
+      }
+
+      const chA = CHAPTERS[segIndex];
+      const chB = CHAPTERS[segIndex + 1];
+      const isMobile = window.innerWidth < 768;
+
+      const camX = lerpVal(chA.camPos.x, chB.camPos.x, plateauMorph);
+      const camY = lerpVal(chA.camPos.y, chB.camPos.y, plateauMorph);
+      const camZ = lerpVal(chA.camPos.z, chB.camPos.z, plateauMorph) + (isMobile ? 28 : 0);
+
+      targetCamPos.set(camX, camY, camZ);
+
+      const lookX = isMobile ? 10 : lerpVal(chA.camLook.x, chB.camLook.x, plateauMorph);
+      const lookY = isMobile ? -4 : lerpVal(chA.camLook.y, chB.camLook.y, plateauMorph);
+      const lookZ = lerpVal(chA.camLook.z, chB.camLook.z, plateauMorph);
+      targetCamLook.set(lookX, lookY, lookZ);
+
+      const nearestChapter = plateauMorph < 0.5 ? segIndex : segIndex + 1;
+      updateHUDForChapter(nearestChapter, plateauMorph);
+    }
+
+    // Summon any Mythical Beast directly (including Bonus State 8: Cá Chép Hóa Rồng)
+    function summonBeastMode(stateId) {
+      if (stateId === null) {
+        manualBeastOverride = null;
+        evaluateScrollTimeline(globalScrollProgress);
+        return;
+      }
+
+      const fromState = currentStatePair.b !== undefined ? currentStatePair.b : 0;
+      manualBeastOverride = stateId;
+      setActiveStatePair(fromState, stateId);
+
+      gsap.fromTo(
+        particleMaterial.uniforms.uMorph,
+        { value: 0.0 },
+        { value: 1.0, duration: 1.25, ease: "power3.inOut" }
+      );
+      triggerParticleBurst(0.42);
+
+      if (stateId === 8) {
+        targetCamPos.set(14, 7, 114);
+        targetCamLook.set(-6, 1, 0);
+        document.getElementById('telemetry-beast').textContent = "CÁ CHÉP HÓA RỒNG";
+        document.getElementById('hud-state-label').textContent = "BONUS · CÁ CHÉP VƯỢT VŨ MÔN HÓA RỒNG";
+        document.querySelectorAll('.dock-btn').forEach(btn => btn.classList.remove('bg-white/15', 'text-white', 'font-semibold'));
+        const koiBtn = document.getElementById('beast-btn-8');
+        if (koiBtn) koiBtn.classList.add('bg-white/15', 'text-white', 'font-semibold');
+        showToast("Triệu hồi Linh Thú: Cá Chép Hóa Rồng!", "Biểu tượng vượt Vũ Môn thăng hoa của Nhóm 5.");
+      }
+    }
+
+    /********************************************************************
+     * 6. SHADCN/UI HUD, PROFILE CARDS, DIRECTORY TABLE & MODALS
+     ********************************************************************/
+    function showToast(title, desc) {
+      const toast = document.getElementById('shadcn-toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-desc').textContent = desc;
+      toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-[-10px]');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
+    }
+
+    function buildTimelineRailNodes() {
+      const container = document.getElementById('rail-nodes');
+      container.innerHTML = '';
+      CHAPTERS.forEach((ch, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'rail-dot w-2 h-2 rounded-full bg-white/20 hover:bg-cyan-400 transition-all duration-200';
+        btn.title = ch.code;
+        btn.onclick = () => {
+          manualBeastOverride = null;
+          scrollToChapter(idx);
+        };
+        container.appendChild(btn);
+      });
+
+      // Populate Finale 6-Member Grid with direct links
+      const finaleGrid = document.getElementById('finale-member-grid');
+      finaleGrid.innerHTML = MEMBERS.map((m, i) => `
+        <div class="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-between gap-2">
+          <button onclick="scrollToChapter(${i + 1})" class="text-left min-w-0">
+            <div class="font-display text-xs font-bold text-white truncate">${m.chapterNum} · ${m.name}</div>
+            <div class="font-mono text-[10px] text-zinc-400 truncate">${m.role}</div>
+          </button>
+          <a href="${m.portfolioUrl}" target="_blank" rel="noopener noreferrer"
+             class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white text-white hover:text-black font-mono text-[10px] shrink-0 transition">
+            Web ↗
+          </a>
+        </div>
+      `).join('');
+
+      populateDirectoryModalContent();
+    }
+
+    function updateHUDForChapter(chapterIdx, morphFraction) {
+      document.getElementById('telemetry-morph').textContent = `${(morphFraction * 100).toFixed(0)}%`;
+      document.getElementById('rail-percent').textContent = `${Math.round(globalScrollProgress * 100).toString().padStart(2, '0')}%`;
+      document.getElementById('rail-progress-bar').style.height = `${(globalScrollProgress * 100).toFixed(1)}%`;
+
+      const finaleOverlay = document.getElementById('finale-overlay');
+      if (globalScrollProgress > 0.90 && manualBeastOverride === null) {
+        finaleOverlay.classList.remove('opacity-0', 'translate-y-4');
+        finaleOverlay.classList.add('opacity-100', 'translate-y-0');
+      } else {
+        finaleOverlay.classList.add('opacity-0', 'translate-y-4');
+        finaleOverlay.classList.remove('opacity-100', 'translate-y-0');
+      }
+
+      currentChapterIndex = chapterIdx;
+      const chapter = CHAPTERS[chapterIdx] || CHAPTERS[0];
+
+      document.getElementById('hud-state-label').textContent = chapter.code;
+      document.getElementById('telemetry-beast').textContent = chapter.beastName;
+      document.getElementById('hud-accent-dot').style.backgroundColor = chapter.accentHex;
+      document.getElementById('hud-accent-ping').style.backgroundColor = chapter.accentHex;
+
+      // Dynamically shift the Aurora Orbs & 3D Sacred Rings color to match the active chapter/member
+      const orb1 = document.getElementById('aurora-orb-1');
+      const orb2 = document.getElementById('aurora-orb-2');
+      if (chapter.memberIndex !== null) {
+        const m = MEMBERS[chapter.memberIndex];
+        if (orb1) orb1.style.background = `radial-gradient(circle, ${m.bgOrb1} 0%, transparent 72%)`;
+        if (orb2) orb2.style.background = `radial-gradient(circle, ${m.bgOrb2} 0%, transparent 72%)`;
+        if (sacredRingsGroup && sacredRingsGroup.children[0]) {
+          sacredRingsGroup.children[0].material.color.set(m.accent);
+        }
+      } else {
+        if (orb1) orb1.style.background = `radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, transparent 72%)`;
+        if (orb2) orb2.style.background = `radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, transparent 72%)`;
+      }
+
+      document.querySelectorAll('.dock-btn').forEach((btn) => {
+        const idx = parseInt(btn.getAttribute('data-dock'), 10);
+        if (idx === chapterIdx && manualBeastOverride === null) {
+          btn.classList.add('bg-white/15', 'text-white', 'font-semibold');
+          btn.classList.remove('text-zinc-300');
+        } else {
+          btn.classList.remove('bg-white/15', 'text-white', 'font-semibold');
+          btn.classList.add('text-zinc-300');
+        }
+      });
+
+      document.querySelectorAll('.rail-dot').forEach((dot, idx) => {
+        if (idx === chapterIdx) {
+          dot.className = 'rail-dot w-2.5 h-2.5 rounded-full bg-cyan-400 scale-125 transition-all';
+        } else {
+          dot.className = 'rail-dot w-2 h-2 rounded-full bg-white/20 hover:bg-white/50 transition-all';
+        }
+      });
+
+      const dossierWrapper = document.getElementById('member-dossier-wrapper');
+      if (chapter.memberIndex !== null) {
+        currentActiveMemberIndex = chapter.memberIndex;
+        populateMemberDossier(MEMBERS[chapter.memberIndex]);
+        dossierWrapper.classList.remove('opacity-0', 'translate-y-4');
+        dossierWrapper.classList.add('opacity-100', 'translate-y-0');
+      } else {
+        dossierWrapper.classList.add('opacity-0', 'translate-y-4');
+        dossierWrapper.classList.remove('opacity-100', 'translate-y-0');
+      }
+    }
+
+    function populateMemberDossier(member) {
+      document.getElementById('dossier-accent-bar').className = `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${member.gradient}`;
+      document.getElementById('dossier-index').textContent = `${member.chapterNum} / 06`;
+      document.getElementById('dossier-index').style.color = member.accent;
+      document.getElementById('dossier-sculpture-badge').textContent = member.sculptureName;
+      document.getElementById('dossier-name').textContent = member.name;
+      document.getElementById('dossier-role').textContent = member.role;
+      document.getElementById('dossier-role').style.color = member.accent;
+      document.getElementById('dossier-particle-status').textContent = `Chữ hạt 3D: ${member.name}`;
+      document.getElementById('dossier-tagline').textContent = member.tagline || member.bio;
+
+      // Update Avatar & Gradient Ring
+      document.getElementById('dossier-avatar-ring').className = `w-16 h-16 rounded-2xl p-[2px] bg-gradient-to-br ${member.gradient} shadow-lg`;
+      const avatarImg = document.getElementById('dossier-avatar-img');
+      if (avatarImg.getAttribute('src') !== member.avatar) {
+        avatarImg.setAttribute('src', member.avatar);
+      }
+
+      document.getElementById('dossier-portfolio-btn').href = member.portfolioUrl;
+
+      const skillsEl = document.getElementById('dossier-skills');
+      skillsEl.innerHTML = member.skills.slice(0, 4).map(skill =>
+        `<span class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-zinc-200">${skill}</span>`
+      ).join('');
+    }
+
+    // Avatar Upload / URL Paste Modal Handlers
+    function openAvatarEditorModal(memberIdx = currentActiveMemberIndex) {
+      const m = MEMBERS[memberIdx] || MEMBERS[0];
+      currentActiveMemberIndex = m.index;
+      document.getElementById('avatar-modal-member-name').textContent = `${m.chapterNum} · ${m.name}`;
+      document.getElementById('avatar-modal-preview').src = m.avatar;
+      document.getElementById('avatar-url-input').value = m.avatar.startsWith('data:') ? '' : m.avatar;
+      document.getElementById('avatar-file-input').value = '';
+
+      const modal = document.getElementById('avatar-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAvatarEditorModal() {
+      const modal = document.getElementById('avatar-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function handleAvatarFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        document.getElementById('avatar-modal-preview').src = dataUrl;
+        document.getElementById('avatar-url-input').value = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveAvatarUrlFromModal() {
+      const inputVal = document.getElementById('avatar-url-input').value.trim();
+      if (!inputVal) {
+        closeAvatarEditorModal();
+        return;
+      }
+      const m = MEMBERS[currentActiveMemberIndex] || MEMBERS[0];
+      m.avatar = inputVal;
+
+      // Save to localStorage for instant persistence on this browser
+      try {
+        const saved = JSON.parse(localStorage.getItem('NHOM5_CUSTOM_AVATARS') || '{}');
+        saved[m.index] = inputVal;
+        localStorage.setItem('NHOM5_CUSTOM_AVATARS', JSON.stringify(saved));
+      } catch (e) {}
+
+      populateMemberDossier(m);
+      populateDirectoryModalContent();
+      closeAvatarEditorModal();
+      showToast(`Đã cập nhật Avatar cho ${m.name}`, "Ảnh đã được lưu tự động trên trình duyệt.");
+    }
+
+    function toggleNameTypographyGlow() {
+      nameGlowBoost = nameGlowBoost > 1.2 ? 0.9 : 1.55;
+      if (particleMaterial) {
+        gsap.to(particleMaterial.uniforms.uNameGlowBoost, {
+          value: nameGlowBoost,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      }
+      document.getElementById('name-glow-label').textContent =
+        nameGlowBoost > 1.2 ? "CHỮ HẠT: NỔI BẬT" : "CHỮ HẠT: CÂN BẰNG";
+      showToast(
+        nameGlowBoost > 1.2 ? "Đã tăng độ sáng Chữ Hạt Tên 3D" : "Chế độ Chữ Hạt Cân Bằng",
+        "28% tổng số hạt tạo thành tên từng thành viên phía trên linh thú."
+      );
+    }
+    function populateDirectoryModalContent() {
+      const tbody = document.getElementById('directory-table-body');
+      tbody.innerHTML = MEMBERS.map((m, i) => `
+        <tr class="hover:bg-white/[0.04] transition">
+          <td class="py-3 px-4 font-mono text-xs text-zinc-400">${m.chapterNum}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-2.5">
+              <img src="${m.avatar}" alt="${m.name}" onerror="this.src='https://placehold.co/100x100/0f172a/38bdf8?text=N5'" class="w-8 h-8 rounded-lg object-cover border border-white/15 shrink-0" />
+              <span class="font-display font-bold text-white">${m.name}</span>
+            </div>
+          </td>
+          <td class="py-3 px-4 font-mono text-xs text-cyan-300">${m.role}</td>
+          <td class="py-3 px-4 font-mono text-xs text-zinc-200">${m.sculptureName}</td>
+          <td class="py-3 px-4 font-mono text-xs">
+            <a href="${m.portfolioUrl}" target="_blank" rel="noopener noreferrer" class="text-emerald-300 hover:underline">
+              ${m.portfolioUrl.replace('https://', '')} ↗
+            </a>
+          </td>
+          <td class="py-3 px-4 text-right whitespace-nowrap">
+            <button onclick="closeDirectoryModal(); scrollToChapter(${i + 1});" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 font-mono text-[11px] text-white mr-1">
+              Xem Hạt 3D
+            </button>
+            <a href="${m.portfolioUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-white text-black font-mono text-[11px] font-semibold hover:bg-zinc-200">
+              Mở Web ↗
+            </a>
+          </td>
+        </tr>
+      `).join('');
+
+      const cardsGrid = document.getElementById('directory-cards-grid');
+      cardsGrid.innerHTML = MEMBERS.map((m, i) => `
+        <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <img src="${m.avatar}" alt="${m.name}" onerror="this.src='https://placehold.co/100x100/0f172a/38bdf8?text=N5'" class="w-12 h-12 rounded-xl object-cover border border-white/15 shrink-0" />
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-cyan-300 font-semibold">${m.chapterNum}</span>
+                  <span class="font-mono text-[10px] text-zinc-400 truncate">${m.sculptureName}</span>
+                </div>
+                <h4 class="font-display text-base font-bold text-white truncate mt-0.5">${m.name}</h4>
+                <div class="font-mono text-[11px] text-emerald-300 truncate">${m.role}</div>
+              </div>
+            </div>
+            <p class="text-xs text-zinc-400 line-clamp-2 mb-3">${m.tagline || m.bio}</p>
+          </div>
+          <div class="flex items-center gap-2 pt-3 border-t border-white/10">
+            <a href="${m.portfolioUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 shadcn-btn-primary py-2 px-3 rounded-xl text-xs text-center">
+              Xem Portfolio ↗
+            </a>
+            <button onclick="closeDirectoryModal(); openAvatarEditorModal(${i});" class="shadcn-btn-secondary py-2 px-2.5 rounded-xl text-xs font-mono" title="Đổi Avatar">
+              Đổi AVT
+            </button>
+            <button onclick="closeDirectoryModal(); scrollToChapter(${i + 1});" class="shadcn-btn-secondary py-2 px-3 rounded-xl text-xs font-mono">
+              3D
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Modal & Interactive Helper Controls
+    function openMemberSheetModal(memberIdx = currentActiveMemberIndex) {
+      const m = MEMBERS[memberIdx] || MEMBERS[0];
+      document.getElementById('modal-member-avatar').src = m.avatar;
+      document.getElementById('modal-member-tag').textContent = `THÀNH VIÊN ${m.chapterNum} // HỒ SƠ CHI TIẾT`;
+      document.getElementById('modal-member-name').textContent = m.name;
+      document.getElementById('modal-member-role').textContent = m.role;
+      document.getElementById('modal-member-bio').textContent = m.bio;
+
+      document.getElementById('table-member-name').textContent = m.name;
+      document.getElementById('table-member-role').textContent = m.role;
+      document.getElementById('table-member-beast').textContent = m.sculptureName;
+      const tLink = document.getElementById('table-member-link');
+      tLink.href = m.portfolioUrl;
+      tLink.textContent = m.portfolioUrl;
+
+      document.getElementById('modal-portfolio-link').href = m.portfolioUrl;
+
+      const projContainer = document.getElementById('modal-projects-list');
+      projContainer.innerHTML = m.projects.map(p => `
+        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+            <h4 class="font-display text-sm font-bold text-white">${p.title}</h4>
+            <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300">${p.metrics}</span>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-2.5">${p.summary}</p>
+          <div class="flex flex-wrap gap-1.5">
+            ${p.stack.map(s => `<span class="font-mono text-[10px] px-2 py-0.5 rounded bg-white/5 text-zinc-300 border border-white/10">${s}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      const modal = document.getElementById('project-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('project-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openDirectoryModal() {
+      populateDirectoryModalContent();
+      const modal = document.getElementById('directory-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDirectoryModal() {
+      const modal = document.getElementById('directory-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copyActiveMemberLink() {
+      const m = MEMBERS[currentActiveMemberIndex] || MEMBERS[0];
+      const tempInput = document.createElement('textarea');
+      tempInput.value = m.portfolioUrl;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Đã sao chép link của ${m.name}`, m.portfolioUrl);
+      } catch (e) {
+        showToast("Link Portfolio", m.portfolioUrl);
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function updateQualityButtonsUI(count) {
+      document.querySelectorAll('.quality-btn').forEach(btn => {
+        const q = parseInt(btn.getAttribute('data-quality'), 10);
+        if (q === count) {
+          btn.classList.add('bg-white/15', 'text-white', 'font-semibold');
+          btn.classList.remove('text-zinc-400');
+        } else {
+          btn.classList.remove('bg-white/15', 'text-white', 'font-semibold');
+          btn.classList.add('text-zinc-400');
+        }
+      });
+      const countEl = document.getElementById('telemetry-count');
+      if (countEl) countEl.textContent = count.toLocaleString();
+    }
+
+    function setParticleQuality(count) {
+      activeParticleCount = Math.min(MAX_PARTICLES, count);
+      if (particleGeometry) {
+        particleGeometry.setDrawRange(0, activeParticleCount);
+      }
+      updateQualityButtonsUI(activeParticleCount);
+      triggerParticleBurst(0.45);
+      showToast(`Mật độ hạt: ${activeParticleCount.toLocaleString()} DOTS`, "Đã cập nhật trực tiếp trên GPU BufferGeometry.");
+    }
+
+    function cycleColorFXMode() {
+      colorFXMode = (colorFXMode + 1) % 4;
+      if (particleMaterial) {
+        particleMaterial.uniforms.uColorFXMode.value = colorFXMode;
+      }
+      const labels = ["FX: NGUYÊN BẢN", "FX: CYBER NEON", "FX: HOÀNG KIM", "FX: CẦU VỒNG"];
+      document.getElementById('fx-mode-label').textContent = labels[colorFXMode];
+      showToast(`Chế độ màu Shader: ${labels[colorFXMode]}`, "Biến đổi phổ màu thời gian thực bằng GLSL.");
+    }
+
+    function toggleMouseForceMode() {
+      mouseForceAttractor = !mouseForceAttractor;
+      if (particleMaterial) {
+        particleMaterial.uniforms.uMouseAttractor.value = mouseForceAttractor ? 1.0 : 0.0;
+      }
+      document.getElementById('mouse-mode-label').textContent =
+        mouseForceAttractor ? "CHUỘT: HỐ ĐEN XOÁY" : "CHUỘT: ĐẨY SÓNG";
+      showToast(
+        mouseForceAttractor ? "Chuột: Hố Đen Hút Xoáy" : "Chuột: Đẩy Sóng Năng Lượng",
+        "Di chuột lên vùng hạt 3D để cảm nhận lực tương tác."
+      );
+    }
+
+    function triggerParticleBurst(strength = 1.0) {
+      if (!particleMaterial) return;
+      gsap.killTweensOf(particleMaterial.uniforms.uBurst);
+      gsap.fromTo(
+        particleMaterial.uniforms.uBurst,
+        { value: strength },
+        { value: 0.0, duration: 1.25, ease: "expo.out" }
+      );
+    }
+
+    function showWebGLFallback() {
+      const fb = document.getElementById('webgl-fallback');
+      const list = document.getElementById('fallback-member-list');
+      if (list) {
+        list.innerHTML = MEMBERS.map(m => `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-white text-sm">${m.chapterNum} · ${m.name}</div>
+              <div class="text-xs text-cyan-300 font-mono">${m.role}</div>
+            </div>
+            <a href="${m.portfolioUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold">
+              Mở Portfolio ↗
+            </a>
+          </div>
+        `).join('');
+      }
+      if (fb) fb.classList.remove('hidden');
+    }
+
+    function scrollToChapter(chapterIdx) {
+      manualBeastOverride = null;
+      const clamped = Math.max(0, Math.min(CHAPTERS.length - 1, chapterIdx));
+      const targetProgress = STATE_ANCHORS[clamped];
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      gsap.to(window, {
+        scrollTo: targetProgress * maxScroll,
+        duration: isReducedMotion ? 0.1 : 1.15,
+        ease: 'power3.inOut'
+      });
+    }
+
+    function stepChapter(delta) {
+      const nextIdx = Math.max(1, Math.min(6, currentChapterIndex + delta));
+      scrollToChapter(nextIdx);
+    }
+
+    function setupScrollAndInteractions() {
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+      ScrollTrigger.create({
+        trigger: '#scroll-track',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.55,
+        onUpdate: (self) => {
+          const vel = Math.max(-1.5, Math.min(1.5, self.getVelocity() / 2500));
+          smoothedScrollVelocity = vel;
+          if (manualBeastOverride !== null && Math.abs(vel) > 0.25) {
+            manualBeastOverride = null;
+          }
+          evaluateScrollTimeline(self.progress);
+        }
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        mouseNDC.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseNDC.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        mouseActivityTarget = 1.0;
+
+        if (isDraggingCanvas) {
+          const dx = e.clientX - dragStart.x;
+          const dy = e.clientY - dragStart.y;
+          userOrbit.targetYaw = Math.max(-0.85, Math.min(0.85, dx * 0.005));
+          userOrbit.targetPitch = Math.max(-0.55, Math.min(0.55, dy * 0.005));
+        }
+      });
+
+      const webglEl = document.getElementById('webgl-container');
+      webglEl.addEventListener('pointerdown', (e) => {
+        isDraggingCanvas = true;
+        dragStart.x = e.clientX;
+        dragStart.y = e.clientY;
+      });
+
+      window.addEventListener('pointerup', () => {
+        isDraggingCanvas = false;
+        userOrbit.targetYaw = 0;
+        userOrbit.targetPitch = 0;
+      });
+
+      window.addEventListener('resize', () => {
+        if (!renderer || !camera) return;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (particleMaterial) {
+          particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
+        }
+        evaluateScrollTimeline(globalScrollProgress);
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeProjectModal();
+          closeDirectoryModal();
+          closeAvatarEditorModal();
+        }
+      });
+    }
+
+    /********************************************************************
+     * 8. MAIN RENDER & TELEMETRY LOOP
+     ********************************************************************/
+    let clock = new THREE.Clock();
+    let frameCount = 0;
+    let fpsAccumTime = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!renderer || !scene || !camera || !particleMaterial) return;
+
+      const dt = Math.min(clock.getDelta(), 0.1);
+      const elapsed = clock.getElapsedTime();
+
+      frameCount++;
+      fpsAccumTime += dt;
+      if (fpsAccumTime >= 0.5) {
+        const fps = Math.min(60, Math.round(frameCount / fpsAccumTime));
+        document.getElementById('telemetry-fps').textContent = fps;
+        frameCount = 0;
+        fpsAccumTime = 0;
+      }
+
+      smoothedScrollVelocity *= 0.9;
+      particleMaterial.uniforms.uTime.value = elapsed;
+      particleMaterial.uniforms.uScrollVelocity.value = smoothedScrollVelocity;
+
+      // Animate 3D Background Sacred Rings, Cyber Horizon Grid & Ambient Bokeh Stars
+      if (sacredRingsGroup) {
+        sacredRingsGroup.rotation.z = elapsed * 0.08;
+        if (sacredRingsGroup.children[1]) {
+          sacredRingsGroup.children[1].rotation.z = -elapsed * 0.14;
+        }
+      }
+      if (ambientStarSystem) {
+        ambientStarSystem.rotation.y = elapsed * 0.015;
+        ambientStarSystem.position.y = Math.sin(elapsed * 0.3) * 3.0;
+      }
+      if (cyberFloorGrid) {
+        cyberFloorGrid.position.z = ((elapsed * 4.0) % 10.0) - 30.0;
+      }
+
+      raycaster.setFromCamera(mouseNDC, camera);
+      if (raycaster.ray.intersectPlane(interactionPlane, intersectPoint)) {
+        particleMaterial.uniforms.uMouseWorld.value.lerp(intersectPoint, 0.25);
+      }
+      mouseActivityTarget *= 0.96;
+      particleMaterial.uniforms.uMouseActive.value = lerpVal(
+        particleMaterial.uniforms.uMouseActive.value,
+        mouseActivityTarget,
+        0.15
+      );
+
+      userOrbit.yaw = lerpVal(userOrbit.yaw, userOrbit.targetYaw, 0.08);
+      userOrbit.pitch = lerpVal(userOrbit.pitch, userOrbit.targetPitch, 0.08);
+
+      const finalCamX = targetCamPos.x + Math.sin(userOrbit.yaw) * 34.0 + (mouseNDC.x < 10 ? mouseNDC.x * 3.8 : 0);
+      const finalCamY = targetCamPos.y + Math.sin(userOrbit.pitch) * 26.0 + (mouseNDC.y < 10 ? mouseNDC.y * 2.8 : 0);
+      const finalCamZ = targetCamPos.z * Math.cos(userOrbit.yaw * 0.5);
+
+      camera.position.x = lerpVal(camera.position.x, finalCamX, 0.07);
+      camera.position.y = lerpVal(camera.position.y, finalCamY, 0.07);
+      camera.position.z = lerpVal(camera.position.z, finalCamZ, 0.07);
+
+      currentCamLook.lerp(targetCamLook, 0.08);
+      camera.lookAt(currentCamLook);
+
+      renderer.render(scene, camera);
+    }
+
+    window.onload = function () {
+      const startApp = () => {
+        buildTimelineRailNodes();
+        const ok = initWebGLScene();
+        if (ok) {
+          setupScrollAndInteractions();
+          evaluateScrollTimeline(0);
+          animate();
+        }
+      };
+
+      // Wait for Be Vietnam Pro font to finish loading before sampling 2D Canvas Vietnamese diacritics!
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(startApp).catch(startApp);
+      } else {
+        startApp();
+      }
+    };
+  </script>
 </body>
 </html>
