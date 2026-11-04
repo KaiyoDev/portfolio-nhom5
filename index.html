@@ -307,30 +307,31 @@
   </div>
 
   <!-- ==================== FLOATING TOP SHADCN HUD BAR ==================== -->
-  <header class="fixed top-0 left-0 right-0 z-30 p-2.5 sm:p-4 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+  <header class="fixed top-0 left-0 right-0 z-30 p-2 sm:p-4 flex items-center justify-between gap-1.5 pointer-events-none">
     <!-- Left: Collective Brand + Chapter Status + Directory Trigger -->
-    <div class="ui-interactive flex items-center gap-2">
-      <div class="shadcn-card px-3.5 py-2 rounded-xl flex items-center gap-2.5">
-        <span class="relative flex h-2.5 w-2.5">
+    <div class="ui-interactive flex items-center gap-1.5 sm:gap-2 min-w-0">
+      <div class="shadcn-card px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl flex items-center gap-2 shrink-0">
+        <span class="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
           <span id="hud-accent-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-          <span id="hud-accent-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400"></span>
+          <span id="hud-accent-dot" class="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-cyan-400"></span>
         </span>
-        <button onclick="scrollToChapter(1)" class="font-display font-bold tracking-wider text-xs sm:text-sm text-white hover:text-cyan-300 transition flex items-center gap-1.5">
+        <button onclick="scrollToChapter(0)" class="font-display font-bold tracking-wider text-[11px] sm:text-sm text-white hover:text-cyan-300 transition flex items-center gap-1">
           <span>NHÓM 5</span>
-          <span class="text-zinc-600 font-normal">/</span>
-          <span class="font-mono text-[11px] text-cyan-300">DOTS.COLLECTIVE</span>
+          <span class="hidden xs:inline text-zinc-600 font-normal">/</span>
+          <span class="hidden sm:inline font-mono text-[11px] text-cyan-300">DOTS.COLLECTIVE</span>
         </button>
         <span class="hidden lg:inline-block h-3.5 w-[1px] bg-white/10"></span>
         <span id="hud-state-label" class="hidden lg:inline-block font-mono text-[11px] text-zinc-300 uppercase tracking-wider">
-          00 · KHỞI NGUYÊN HẠT
+          01 · PORTFOLIO NHÓM 5
         </span>
       </div>
 
       <!-- Button: Open Full 6-Member Shadcn Directory & Table Modal -->
-      <button onclick="openDirectoryModal()" class="shadcn-pill px-3.5 py-2 rounded-xl font-sans text-xs font-medium text-white flex items-center gap-2 border-cyan-500/30 hover:border-cyan-400">
-        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <span>Bảng Thành Viên Nhóm 5</span>
-        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">6 Profile</span>
+      <button onclick="openDirectoryModal()" class="shadcn-pill px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl font-sans text-[11px] sm:text-xs font-medium text-white flex items-center gap-1.5 border-cyan-500/30 hover:border-cyan-400 shrink-0">
+        <svg class="w-3.5 h-3.5 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span class="hidden sm:inline">Bảng Thành Viên Nhóm 5</span>
+        <span class="sm:hidden">6 Hồ Sơ</span>
+        <span class="hidden md:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">6 Profile</span>
       </button>
     </div>
 
@@ -346,33 +347,34 @@
     </div>
 
     <!-- Right: Particle Density (35K/55K/80K), Name Focus, Shader Color FX, Mouse Force, Pulse -->
-    <div class="ui-interactive flex flex-wrap items-center gap-1.5">
+    <div class="ui-interactive flex items-center gap-1 sm:gap-1.5 shrink-0">
       <!-- Particle Density Selector -->
-      <div class="shadcn-card rounded-xl p-1 flex items-center text-[11px] font-mono" title="Mật độ hạt 3D">
-        <button data-quality="35000" onclick="setParticleQuality(35000)" class="quality-btn px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">35K</button>
-        <button data-quality="55000" onclick="setParticleQuality(55000)" class="quality-btn px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">55K</button>
-        <button data-quality="80000" onclick="setParticleQuality(80000)" class="quality-btn px-2 py-1 rounded-lg bg-white/15 text-white font-semibold transition">80K★</button>
+      <div class="shadcn-card rounded-xl p-0.5 sm:p-1 flex items-center text-[10px] sm:text-[11px] font-mono" title="Mật độ hạt 3D">
+        <button data-quality="35000" onclick="setParticleQuality(35000)" class="quality-btn px-1.5 sm:px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">35K</button>
+        <button data-quality="55000" onclick="setParticleQuality(55000)" class="quality-btn px-1.5 sm:px-2 py-1 rounded-lg text-zinc-400 hover:text-white transition">55K</button>
+        <button data-quality="80000" onclick="setParticleQuality(80000)" class="quality-btn px-1.5 sm:px-2 py-1 rounded-lg bg-white/15 text-white font-semibold transition">80K★</button>
       </div>
 
       <!-- Highlight 3D Particle Name Typography Toggle -->
-      <button id="btn-name-glow" onclick="toggleNameTypographyGlow()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-emerald-300 hover:text-white flex items-center gap-1.5" title="Làm nổi bật Chữ Hạt Tên Thành Viên 3D">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="name-glow-label">CHỮ HẠT: NỔI BẬT</span>
+      <button id="btn-name-glow" onclick="toggleNameTypographyGlow()" class="shadcn-pill px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-mono text-[10px] sm:text-[11px] text-emerald-300 hover:text-white flex items-center gap-1" title="Làm nổi bật Chữ Hạt Tên Thành Viên 3D">
+        <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="name-glow-label" class="hidden md:inline">CHỮ HẠT: NỔI BẬT</span>
+        <span class="md:hidden">CHỮ</span>
       </button>
 
       <!-- Shader Color FX Mode Cycle -->
-      <button id="btn-fx-mode" onclick="cycleColorFXMode()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-fuchsia-300 hover:text-white flex items-center gap-1.5" title="Đổi hiệu ứng màu Shader">
+      <button id="btn-fx-mode" onclick="cycleColorFXMode()" class="shadcn-pill px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-mono text-[10px] sm:text-[11px] text-fuchsia-300 hover:text-white flex items-center gap-1" title="Đổi hiệu ứng màu Shader">
         <span class="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-400"></span>
-        <span id="fx-mode-label">FX: NGUYÊN BẢN</span>
+        <span id="fx-mode-label" class="hidden lg:inline">FX: NGUYÊN BẢN</span>
       </button>
 
       <!-- Mouse Force Mode Toggle (Repel vs Blackhole Vortex) -->
-      <button id="btn-mouse-mode" onclick="toggleMouseForceMode()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-amber-300 hover:text-white hidden sm:flex items-center gap-1.5" title="Chế độ tương tác chuột">
+      <button id="btn-mouse-mode" onclick="toggleMouseForceMode()" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-amber-300 hover:text-white hidden xl:flex items-center gap-1.5" title="Chế độ tương tác chuột">
         <span id="mouse-mode-label">CHUỘT: ĐẨY SÓNG</span>
       </button>
 
       <!-- Supernova Shockwave Pulse -->
-      <button onclick="triggerParticleBurst(1.1)" class="shadcn-pill px-3 py-2 rounded-xl font-mono text-[11px] text-cyan-300 hover:text-white flex items-center gap-1" title="Phát nổ & Tái tạo hạt">
+      <button onclick="triggerParticleBurst(1.1)" class="shadcn-pill px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-mono text-[11px] text-cyan-300 hover:text-white flex items-center gap-1" title="Phát nổ & Tái tạo hạt">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         <span class="hidden md:inline">BÙNG NỔ</span>
       </button>
@@ -390,23 +392,27 @@
     </div>
   </aside>
 
-  <!-- ==================== ULTRA-CLEAN COMPACT SHADCN/UI MEMBER PROFILE CARD (LEFT SIDE) ==================== -->
-  <section id="member-dossier-wrapper" class="fixed left-3 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 z-20 w-[calc(100vw-1.5rem)] sm:w-[370px] pointer-events-none transition-all duration-500 opacity-0 translate-y-4">
-    <div class="ui-interactive shadcn-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+  <!-- ==================== ULTRA-CLEAN COMPACT SHADCN/UI MEMBER PROFILE CARD (BOTTOM SHEET ON MOBILE, LEFT ON DESKTOP) ==================== -->
+  <section id="member-dossier-wrapper" class="fixed left-2.5 right-2.5 bottom-14 md:right-auto md:bottom-auto md:left-7 md:top-1/2 md:-translate-y-1/2 z-20 md:w-[365px] pointer-events-none transition-all duration-500 opacity-0 translate-y-4">
+    <div class="ui-interactive shadcn-card rounded-2xl p-3 sm:p-4 md:p-5 relative overflow-hidden">
       <!-- Top Gradient Bar -->
       <div id="dossier-accent-bar" class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-violet-400 to-transparent"></div>
 
-      <!-- Compact Top Row: Member Badge + Beast Pill + Prev/Next -->
-      <div class="flex items-center justify-between gap-2 mb-3.5">
-        <div class="flex items-center gap-1.5 flex-wrap">
+      <!-- Compact Top Row: Member Badge + Beast Pill + Mobile Collapse Toggle + Prev/Next -->
+      <div class="flex items-center justify-between gap-1.5 mb-2.5 sm:mb-3.5">
+        <div class="flex items-center gap-1.5 flex-wrap min-w-0">
           <span id="dossier-index" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-white/10 text-cyan-300 font-semibold border border-white/10">
             01 / 06
           </span>
-          <span id="dossier-sculpture-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-200 border border-cyan-500/25">
+          <span id="dossier-sculpture-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-200 border border-cyan-500/25 truncate max-w-[165px] sm:max-w-none">
             🐉 LONG THẦN
           </span>
         </div>
         <div class="flex items-center gap-1 shrink-0">
+          <!-- Mobile Minimize/Expand Card Button so user can inspect full 3D canvas anytime -->
+          <button onclick="toggleMobileDossierCollapse()" id="btn-collapse-dossier" class="md:hidden px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-mono text-cyan-300 border border-white/10 transition" title="Thu gọn / Mở rộng thẻ">
+            Thu gọn
+          </button>
           <button onclick="stepChapter(-1)" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 border border-white/10 transition" title="Thành viên trước">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
@@ -417,9 +423,9 @@
       </div>
 
       <!-- Identity Row: Avatar Slot (with Edit/Upload trigger) + Name & Academic Role -->
-      <div class="flex items-center gap-3.5 mb-3.5">
+      <div class="flex items-center gap-3 mb-2.5 sm:mb-3.5">
         <div class="relative group shrink-0">
-          <div id="dossier-avatar-ring" class="w-16 h-16 rounded-2xl p-[2px] bg-gradient-to-br from-cyan-400 via-violet-500 to-amber-300 shadow-lg">
+          <div id="dossier-avatar-ring" class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl p-[2px] bg-gradient-to-br from-cyan-400 via-violet-500 to-amber-300 shadow-lg">
             <img id="dossier-avatar-img"
                  src="https://placehold.co/200x200/0b132b/22d3ee?text=HA"
                  alt="Member Avatar"
@@ -435,43 +441,46 @@
         </div>
 
         <div class="min-w-0 flex-1">
-          <h2 id="dossier-name" class="font-display text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight truncate">
+          <h2 id="dossier-name" class="font-display text-lg sm:text-2xl font-bold tracking-tight text-white leading-tight truncate">
             ĐẶNG HOÀNG ÂN
           </h2>
-          <div id="dossier-role" class="font-mono text-xs text-cyan-300 font-semibold mt-0.5 leading-snug">
+          <div id="dossier-role" class="font-mono text-[11px] sm:text-xs text-cyan-300 font-semibold mt-0.5 leading-snug truncate">
             CNTT, Khoa học dữ liệu & AI, K24
           </div>
-          <div class="flex items-center gap-1.5 mt-1">
+          <div class="hidden sm:flex items-center gap-1.5 mt-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
             <span id="dossier-particle-status" class="font-mono text-[10px] text-zinc-400">Chữ hạt 3D: ĐẶNG HOÀNG ÂN</span>
           </div>
         </div>
       </div>
 
-      <!-- Concise 1-Line Tagline (No Long Paragraph) -->
-      <p id="dossier-tagline" class="text-xs text-zinc-300 leading-relaxed mb-3 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.07]">
-        Nghiên cứu Deep Learning, Computer Vision & Hệ thống AI thông minh.
-      </p>
+      <!-- Collapsible Body on Mobile -->
+      <div id="dossier-collapsible-body" class="transition-all duration-300">
+        <!-- Concise 1-Line Tagline (No Long Paragraph) -->
+        <p id="dossier-tagline" class="text-[11px] sm:text-xs text-zinc-300 leading-relaxed mb-2.5 sm:mb-3 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-white/[0.03] border border-white/[0.07] line-clamp-2">
+          Nghiên cứu Deep Learning, Computer Vision & Hệ thống AI thông minh.
+        </p>
 
-      <!-- Compact Top Skills Pills (Max 4 clean pills) -->
-      <div id="dossier-skills" class="flex flex-wrap gap-1.5 mb-4"></div>
+        <!-- Compact Top Skills Pills (Max 4 clean pills) -->
+        <div id="dossier-skills" class="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4"></div>
+      </div>
 
       <!-- Clean Action Row: Open Portfolio + Details Modal + Copy Link -->
-      <div class="flex items-center gap-2 pt-3 border-t border-white/10">
+      <div class="flex items-center gap-1.5 sm:gap-2 pt-2.5 sm:pt-3 border-t border-white/10">
         <a id="dossier-portfolio-btn" href="https://kaiyodev.github.io/portfolio-an/" target="_blank" rel="noopener noreferrer"
-           class="flex-1 shadcn-btn-primary py-2.5 px-3.5 rounded-xl font-sans text-xs flex items-center justify-center gap-1.5 text-center">
+           class="flex-1 shadcn-btn-primary py-2 sm:py-2.5 px-3 rounded-xl font-sans text-xs flex items-center justify-center gap-1.5 text-center">
           <span>Mở Portfolio</span>
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
         <button onclick="openMemberSheetModal(currentActiveMemberIndex)"
                 title="Xem dự án & thông tin chi tiết"
-                class="shadcn-btn-secondary py-2.5 px-3 rounded-xl font-sans text-xs font-medium flex items-center justify-center gap-1.5">
+                class="shadcn-btn-secondary py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl font-sans text-xs font-medium flex items-center justify-center gap-1">
           <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           <span>Chi Tiết</span>
         </button>
         <button onclick="copyActiveMemberLink()"
                 title="Copy Link Portfolio"
-                class="shadcn-btn-secondary p-2.5 rounded-xl text-zinc-300 hover:text-white flex items-center justify-center">
+                class="shadcn-btn-secondary p-2 sm:p-2.5 rounded-xl text-zinc-300 hover:text-white flex items-center justify-center">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
         </button>
       </div>
@@ -479,22 +488,22 @@
   </section>
 
   <!-- ==================== CLOSING COLLECTIVE FINALE OVERLAY (88-100%) ==================== -->
-  <section id="finale-overlay" class="fixed right-3 sm:right-14 bottom-20 z-20 max-w-lg pointer-events-none opacity-0 translate-y-4 transition-all duration-500">
-    <div class="ui-interactive shadcn-card rounded-2xl p-5 sm:p-6 border border-white/15">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-mono text-[11px] text-amber-300 uppercase tracking-widest">08 · ĐẠI HỘI TỤ NHÓM 5</span>
-        <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-white/10 text-zinc-300">6 Thành Viên · 1 Hệ Hạt</span>
+  <section id="finale-overlay" class="fixed left-2.5 right-2.5 sm:left-auto sm:right-14 bottom-14 sm:bottom-20 z-20 max-w-lg pointer-events-none opacity-0 translate-y-4 transition-all duration-500">
+    <div class="ui-interactive shadcn-card rounded-2xl p-4 sm:p-6 border border-white/15 max-h-[60vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-1.5 sm:mb-2">
+        <span class="font-mono text-[10px] sm:text-[11px] text-amber-300 uppercase tracking-widest">08 · ĐẠI HỘI TỤ NHÓM 5</span>
+        <span class="font-mono text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-white/10 text-zinc-300">6 Thành Viên · 1 Hệ Hạt</span>
       </div>
-      <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Nhóm 5 — Lục Linh Hội Tụ</h3>
-      <p class="text-xs text-zinc-300 leading-relaxed mb-3.5">
+      <h3 class="font-display text-lg sm:text-2xl font-bold text-white mb-1.5 sm:mb-2">Nhóm 5 — Lục Linh Hội Tụ</h3>
+      <p class="hidden sm:block text-xs text-zinc-300 leading-relaxed mb-3.5">
         Từ chữ <strong>PORTFOLIO NHÓM 5</strong> mở màn cho đến <strong>Long Thần, Kỳ Lân, Bạch Hổ, Phượng Hoàng, Hồ Điệp</strong> và <strong>Cửu Vĩ Linh Hồ</strong> — tất cả đều biến hình từ cùng một trường hạt duy nhất.
       </p>
-      <div id="finale-member-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4"></div>
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/10">
-        <button onclick="openDirectoryModal()" class="shadcn-btn-primary px-4 py-2 rounded-xl text-xs flex items-center gap-1.5">
+      <div id="finale-member-grid" class="grid grid-cols-2 gap-1.5 sm:gap-2 mb-3 sm:mb-4"></div>
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 sm:pt-3 border-t border-white/10">
+        <button onclick="openDirectoryModal()" class="shadcn-btn-primary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
           <span>Xem Bảng Tổng Hợp 6 Hồ Sơ</span>
         </button>
-        <button onclick="scrollToChapter(0)" class="shadcn-btn-secondary px-3.5 py-2 rounded-xl text-xs font-mono">
+        <button onclick="scrollToChapter(0)" class="shadcn-btn-secondary px-3 py-2 rounded-xl text-xs font-mono">
           ↑ Về Đầu Trang
         </button>
       </div>
@@ -675,7 +684,7 @@
           cohort: "K24 · Nhóm 5",
           // 👇 DÁN LINK ẢNH AVATAR CỦA ĐẶNG HOÀNG ÂN VÀO ĐÂY:
           avatar: "https://placehold.co/240x240/081c24/22d3ee?text=HOANG+AN",
-          portfolioUrl: "https://kaiyodev.github.io/portfolio-an/",
+          portfolioUrl: "portfolio-framer-xi.vercel.app",
           sculptureName: "🐉 LONG THẦN & NGỌC AI",
           paletteLabel: "Cyan, Electric Violet & Liquid Silver",
           accent: "#22d3ee",
@@ -2170,16 +2179,22 @@
 
       const chA = CHAPTERS[segIndex];
       const chB = CHAPTERS[segIndex + 1];
+      const aspect = window.innerWidth / Math.max(1, window.innerHeight);
       const isMobile = window.innerWidth < 768;
 
-      const camX = lerpVal(chA.camPos.x, chB.camPos.x, plateauMorph);
-      const camY = lerpVal(chA.camPos.y, chB.camPos.y, plateauMorph);
-      const camZ = lerpVal(chA.camPos.z, chB.camPos.z, plateauMorph) + (isMobile ? 28 : 0);
+      // Adaptive Portrait Framing: pull camera back proportional to narrow aspect ratio
+      // and shift camera target down so the 3D Sculpture + Vietnamese Name sit cleanly in the upper 60% of the mobile screen!
+      const portraitZoomOut = aspect < 1.0 ? Math.min(115, (1.0 / Math.max(0.42, aspect) - 1.0) * 82) : 0;
+
+      const camX = isMobile ? 12 : lerpVal(chA.camPos.x, chB.camPos.x, plateauMorph);
+      const camY = isMobile ? 2 : lerpVal(chA.camPos.y, chB.camPos.y, plateauMorph);
+      const camZ = lerpVal(chA.camPos.z, chB.camPos.z, plateauMorph) + portraitZoomOut;
 
       targetCamPos.set(camX, camY, camZ);
 
-      const lookX = isMobile ? 10 : lerpVal(chA.camLook.x, chB.camLook.x, plateauMorph);
-      const lookY = isMobile ? -4 : lerpVal(chA.camLook.y, chB.camLook.y, plateauMorph);
+      const isMemberScene = (chA.memberIndex !== null || chB.memberIndex !== null);
+      const lookX = isMobile ? (isMemberScene ? 14 : 0) : lerpVal(chA.camLook.x, chB.camLook.x, plateauMorph);
+      const lookY = isMobile ? (isMemberScene ? -14 : -4) : lerpVal(chA.camLook.y, chB.camLook.y, plateauMorph);
       const lookZ = lerpVal(chA.camLook.z, chB.camLook.z, plateauMorph);
       targetCamLook.set(lookX, lookY, lookZ);
 
@@ -2207,8 +2222,11 @@
       triggerParticleBurst(0.42);
 
       if (stateId === 8) {
-        targetCamPos.set(14, 7, 114);
-        targetCamLook.set(-6, 1, 0);
+        const aspect = window.innerWidth / Math.max(1, window.innerHeight);
+        const isMobile = window.innerWidth < 768;
+        const portraitZoomOut = aspect < 1.0 ? Math.min(115, (1.0 / Math.max(0.42, aspect) - 1.0) * 82) : 0;
+        targetCamPos.set(14, isMobile ? 2 : 7, 114 + portraitZoomOut);
+        targetCamLook.set(isMobile ? 12 : -6, isMobile ? -12 : 1, 0);
         document.getElementById('telemetry-beast').textContent = "CÁ CHÉP HÓA RỒNG";
         document.getElementById('hud-state-label').textContent = "BONUS · CÁ CHÉP VƯỢT VŨ MÔN HÓA RỒNG";
         document.querySelectorAll('.dock-btn').forEach(btn => btn.classList.remove('bg-white/15', 'text-white', 'font-semibold'));
@@ -2654,6 +2672,22 @@
     function stepChapter(delta) {
       const nextIdx = Math.max(1, Math.min(6, currentChapterIndex + delta));
       scrollToChapter(nextIdx);
+    }
+
+    let isMobileDossierCollapsed = false;
+    function toggleMobileDossierCollapse() {
+      isMobileDossierCollapsed = !isMobileDossierCollapsed;
+      const bodyEl = document.getElementById('dossier-collapsible-body');
+      const btnEl = document.getElementById('btn-collapse-dossier');
+      if (bodyEl && btnEl) {
+        if (isMobileDossierCollapsed) {
+          bodyEl.classList.add('hidden');
+          btnEl.textContent = 'Mở rộng';
+        } else {
+          bodyEl.classList.remove('hidden');
+          btnEl.textContent = 'Thu gọn';
+        }
+      }
     }
 
     function setupScrollAndInteractions() {
